@@ -53,11 +53,11 @@ const KIND_LABEL: Record<IssueRecoveryActionKind, string> = {
 const KIND_HEADLINE: Record<IssueRecoveryActionKind, string> = {
   missing_disposition: "This issue's run finished, but no next step was chosen.",
   stranded_assigned_issue:
-    "Paperclip retried this issue's last run and it still has no live execution path.",
+    "Kovv-ia a réessayé la dernière exécution de ce ticket et il n'a toujours pas de chemin d'exécution actif.",
   active_run_watchdog:
     "The active run has been silent. Recovery is observing without interrupting it.",
   issue_graph_liveness:
-    "Paperclip detected this issue lost a live action path. A recovery owner needs to act.",
+    "Kovv-ia a détecté que ce ticket a perdu un chemin d'action actif. Un responsable de récupération doit intervenir.",
 };
 
 const STATE_TONE: Record<RecoveryCardCardState, {

@@ -51,8 +51,8 @@ export function DevRestartBanner({ devServer }: { devServer?: DevServerHealthSta
   async function requestRestartNow() {
     const warning =
       currentDevServer.activeRunCount > 0
-        ? `Restart Paperclip now? This may interrupt ${activeRunLabel}.`
-        : "Restart Paperclip now?";
+        ? `Redémarrer Kovv-ia maintenant ? Cela pourrait interrompre ${activeRunLabel}.`
+        : "Redémarrer Kovv-ia maintenant ?";
     if (!window.confirm(warning)) return;
 
     setRestartPending(true);

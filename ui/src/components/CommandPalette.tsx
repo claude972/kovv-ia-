@@ -121,7 +121,7 @@ export function CommandPalette() {
         if (v && isMobile) setSidebarOpen(false);
       }}>
       <CommandInput
-        placeholder="Search issues, agents, projects..."
+        placeholder="Rechercher tâches, agents, projets..."
         value={query}
         onValueChange={setQuery}
         onKeyDown={(event) => {
@@ -135,17 +135,17 @@ export function CommandPalette() {
         <CommandEmpty>
           {showSearchAll ? (
             <span>
-              No quick issue matches. Press{" "}
+              Aucune tâche trouvée rapidement. Appuyez sur{" "}
               <kbd className="rounded border border-border bg-muted px-1 py-0.5 text-[10px]">↵</kbd>{" "}
-              to <span className="font-medium">search all</span> or keep typing to refine.
+              pour <span className="font-medium">rechercher partout</span> ou continuez à saisir.
             </span>
           ) : (
-            "No results found."
+            "Aucun résultat."
           )}
         </CommandEmpty>
 
         {showSearchAll ? (
-          <CommandGroup heading="Search">
+          <CommandGroup heading="Recherche">
             <CommandItem
               value={`${SEARCH_ALL_VALUE} ${searchQuery}`}
               onSelect={goFullSearch}
@@ -154,10 +154,10 @@ export function CommandPalette() {
             >
               <Search className="mr-2 h-4 w-4" />
               <span className="flex-1 truncate">
-                Search all for <span className="font-semibold">&ldquo;{searchQuery}&rdquo;</span>
+                Rechercher partout : <span className="font-semibold">&ldquo;{searchQuery}&rdquo;</span>
               </span>
               <span className="ml-auto inline-flex items-center gap-1 text-xs text-muted-foreground">
-                <span>open full search</span>
+                <span>ouvrir la recherche</span>
                 <kbd className="rounded border border-border bg-background px-1 py-0.5 text-[10px]">↵</kbd>
               </span>
             </CommandItem>
@@ -174,7 +174,7 @@ export function CommandPalette() {
             }}
           >
             <SquarePen className="mr-2 h-4 w-4" />
-            Create new issue
+            Créer une tâche
             <span className="ml-auto text-xs text-muted-foreground">C</span>
           </CommandItem>
           <CommandItem
@@ -184,11 +184,11 @@ export function CommandPalette() {
             }}
           >
             <Plus className="mr-2 h-4 w-4" />
-            Create new agent
+            Créer un agent
           </CommandItem>
           <CommandItem onSelect={() => go("/projects")}>
             <Plus className="mr-2 h-4 w-4" />
-            Create new project
+            Créer un projet
           </CommandItem>
         </CommandGroup>
 
@@ -197,23 +197,23 @@ export function CommandPalette() {
         <CommandGroup heading="Pages">
           <CommandItem onSelect={() => go("/dashboard")}>
             <LayoutDashboard className="mr-2 h-4 w-4" />
-            Dashboard
+            Tableau de bord
           </CommandItem>
           <CommandItem onSelect={() => go("/inbox")}>
             <Inbox className="mr-2 h-4 w-4" />
-            Inbox
+            Boîte de réception
           </CommandItem>
           <CommandItem onSelect={() => go("/issues")}>
             <CircleDot className="mr-2 h-4 w-4" />
-            Issues
+            Tâches
           </CommandItem>
           <CommandItem onSelect={() => go("/projects")}>
             <Hexagon className="mr-2 h-4 w-4" />
-            Projects
+            Projets
           </CommandItem>
           <CommandItem onSelect={() => go("/goals")}>
             <Target className="mr-2 h-4 w-4" />
-            Goals
+            Objectifs
           </CommandItem>
           <CommandItem onSelect={() => go("/agents")}>
             <Bot className="mr-2 h-4 w-4" />
@@ -221,18 +221,18 @@ export function CommandPalette() {
           </CommandItem>
           <CommandItem onSelect={() => go("/costs")}>
             <DollarSign className="mr-2 h-4 w-4" />
-            Costs
+            Coûts
           </CommandItem>
           <CommandItem onSelect={() => go("/activity")}>
             <History className="mr-2 h-4 w-4" />
-            Activity
+            Activité
           </CommandItem>
         </CommandGroup>
 
         {visibleIssues.length > 0 && (
           <>
             <CommandSeparator />
-            <CommandGroup heading="Issues">
+            <CommandGroup heading="Tâches">
               {visibleIssues.slice(0, 10).map((issue) => (
                 <CommandItem
                   key={issue.id}
@@ -276,7 +276,7 @@ export function CommandPalette() {
         {projects.length > 0 && (
           <>
             <CommandSeparator />
-            <CommandGroup heading="Projects">
+            <CommandGroup heading="Projets">
               {projects.slice(0, 10).map((project) => (
                 <CommandItem key={project.id} onSelect={() => go(projectUrl(project))}>
                   <Hexagon className="mr-2 h-4 w-4" />

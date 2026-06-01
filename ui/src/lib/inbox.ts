@@ -821,10 +821,10 @@ const inboxWorkItemKindOrder: InboxWorkItem["kind"][] = [
 ];
 
 const inboxWorkItemKindLabels: Record<InboxWorkItem["kind"], string> = {
-  issue: "Issues",
-  approval: "Approvals",
-  failed_run: "Failed runs",
-  join_request: "Join requests",
+  issue: "Tickets",
+  approval: "Approbations",
+  failed_run: "Exécutions échouées",
+  join_request: "Demandes d'accès",
 };
 
 function resolveIssueAssigneeGroup(

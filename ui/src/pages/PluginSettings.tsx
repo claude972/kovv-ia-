@@ -128,7 +128,7 @@ export function PluginSettings() {
   }, [pluginId]);
 
   if (pluginLoading) {
-    return <div className="p-4 text-sm text-muted-foreground">Loading plugin details...</div>;
+    return <div className="p-4 text-sm text-muted-foreground">Chargement des détails du plugin…</div>;
   }
 
   if (!plugin) {
@@ -177,7 +177,7 @@ export function PluginSettings() {
           align="start"
           items={[
             { value: "configuration", label: "Configuration" },
-            { value: "status", label: "Status" },
+            { value: "status", label: "Statut" },
           ]}
           value={activeTab}
           onValueChange={(value) => setActiveTab(value as "configuration" | "status")}
@@ -186,7 +186,7 @@ export function PluginSettings() {
         <TabsContent value="configuration" className="space-y-6">
           <div className="space-y-8">
             <section className="space-y-5">
-              <h2 className="text-base font-semibold">About</h2>
+              <h2 className="text-base font-semibold">À propos</h2>
               <div className="grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(220px,0.8fr)]">
                 <div className="space-y-2">
                   <h3 className="text-sm font-medium text-muted-foreground">Description</h3>
@@ -194,11 +194,11 @@ export function PluginSettings() {
                 </div>
                 <div className="space-y-4 text-sm">
                   <div className="space-y-1.5">
-                    <h3 className="font-medium text-muted-foreground">Author</h3>
+                    <h3 className="font-medium text-muted-foreground">Auteur</h3>
                     <p className="text-foreground">{plugin.manifestJson.author}</p>
                   </div>
                   <div className="space-y-2">
-                    <h3 className="font-medium text-muted-foreground">Categories</h3>
+                    <h3 className="font-medium text-muted-foreground">Catégories</h3>
                     <div className="flex flex-wrap gap-2">
                       {plugin.categories.length > 0 ? (
                         plugin.categories.map((category) => (
@@ -207,7 +207,7 @@ export function PluginSettings() {
                           </Badge>
                         ))
                       ) : (
-                        <span className="text-foreground">None</span>
+                        <span className="text-foreground">Aucune</span>
                       )}
                     </div>
                   </div>
@@ -219,7 +219,7 @@ export function PluginSettings() {
 
             <section className="space-y-4">
               <div className="space-y-1">
-                <h2 className="text-base font-semibold">Settings</h2>
+                <h2 className="text-base font-semibold">Paramètres</h2>
               </div>
               {hasLocalFolders ? (
                 <PluginLocalFoldersSettings
@@ -253,20 +253,19 @@ export function PluginSettings() {
                 />
               ) : environmentDrivers.length > 0 ? (
                 <div className="rounded-md border border-border/60 bg-muted/20 px-4 py-3 text-sm">
-                  <p className="font-medium text-foreground">Configure this plugin from Company Environments.</p>
+                  <p className="font-medium text-foreground">Configurez ce plugin depuis les Environnements de l'entreprise.</p>
                   <p className="mt-1 text-muted-foreground">
-                    {driverLabel || "This plugin"} registers environment runtime settings there so credentials stay
-                    company-scoped instead of instance-global.
+                    {driverLabel || "Ce plugin"} enregistre les paramètres d'exécution d'environnement à cet endroit afin que les identifiants restent limités à l'entreprise plutôt que globaux à l'instance.
                   </p>
                   <div className="mt-3">
                     <Link to="/company/settings/environments">
-                      <Button variant="outline" size="sm">Open Company Environments</Button>
+                      <Button variant="outline" size="sm">Ouvrir les Environnements de l'entreprise</Button>
                     </Link>
                   </div>
                 </div>
               ) : !hasLocalFolders ? (
                 <p className="text-sm text-muted-foreground">
-                  This plugin does not require any settings.
+                  Ce plugin ne nécessite aucun paramètre.
                 </p>
               ) : null}
             </section>
@@ -280,10 +279,10 @@ export function PluginSettings() {
                 <CardHeader>
                   <CardTitle className="text-base flex items-center gap-1.5">
                     <Cpu className="h-4 w-4" />
-                    Runtime Dashboard
+                    Tableau de bord d'exécution
                   </CardTitle>
                   <CardDescription>
-                    Worker process, scheduled jobs, and webhook deliveries
+                    Processus worker, tâches planifiées et livraisons de webhooks
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -292,12 +291,12 @@ export function PluginSettings() {
                       <div>
                         <h3 className="text-sm font-medium mb-3 flex items-center gap-1.5">
                           <Cpu className="h-3.5 w-3.5 text-muted-foreground" />
-                          Worker Process
+                          Processus worker
                         </h3>
                         {dashboardData.worker ? (
                           <div className="grid grid-cols-2 gap-3 text-sm">
                             <div className="flex justify-between">
-                              <span className="text-muted-foreground">Status</span>
+                              <span className="text-muted-foreground">Statut</span>
                               <Badge variant={dashboardData.worker.status === "running" ? "default" : "secondary"}>
                                 {dashboardData.worker.status}
                               </Badge>
@@ -307,11 +306,11 @@ export function PluginSettings() {
                               <span className="font-mono text-xs">{dashboardData.worker.pid ?? "—"}</span>
                             </div>
                             <div className="flex justify-between">
-                              <span className="text-muted-foreground">Uptime</span>
+                              <span className="text-muted-foreground">Disponibilité</span>
                               <span className="text-xs">{formatUptime(dashboardData.worker.uptime)}</span>
                             </div>
                             <div className="flex justify-between">
-                              <span className="text-muted-foreground">Pending RPCs</span>
+                              <span className="text-muted-foreground">RPC en attente</span>
                               <span className="text-xs">{dashboardData.worker.pendingRequests}</span>
                             </div>
                             {dashboardData.worker.totalCrashes > 0 && (
@@ -319,10 +318,10 @@ export function PluginSettings() {
                                 <div className="flex justify-between col-span-2">
                                   <span className="text-muted-foreground flex items-center gap-1">
                                     <AlertTriangle className="h-3 w-3 text-amber-500" />
-                                    Crashes
+                                    Plantages
                                   </span>
                                   <span className="text-xs">
-                                    {dashboardData.worker.consecutiveCrashes} consecutive / {dashboardData.worker.totalCrashes} total
+                                    {dashboardData.worker.consecutiveCrashes} consécutif{dashboardData.worker.consecutiveCrashes > 1 ? "s" : ""} / {dashboardData.worker.totalCrashes} total
                                   </span>
                                 </div>
                                 {dashboardData.worker.lastCrashAt && (

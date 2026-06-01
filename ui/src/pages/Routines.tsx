@@ -49,13 +49,13 @@ import type { RoutineListItem, RoutineVariable } from "@paperclipai/shared";
 const concurrencyPolicies = ["coalesce_if_active", "always_enqueue", "skip_if_active"];
 const catchUpPolicies = ["skip_missed", "enqueue_missed_with_cap"];
 const concurrencyPolicyDescriptions: Record<string, string> = {
-  coalesce_if_active: "If a run is already active, keep just one follow-up run queued.",
-  always_enqueue: "Queue every trigger occurrence, even if the routine is already running.",
-  skip_if_active: "Drop new trigger occurrences while a run is still active.",
+  coalesce_if_active: "Si une exécution est déjà en cours, une seule exécution suivante reste en attente.",
+  always_enqueue: "Chaque déclenchement est mis en file d'attente, même si la routine est déjà en cours.",
+  skip_if_active: "Les nouveaux déclenchements sont ignorés tant qu'une exécution est active.",
 };
 const catchUpPolicyDescriptions: Record<string, string> = {
-  skip_missed: "Ignore windows that were missed while the scheduler or routine was paused.",
-  enqueue_missed_with_cap: "Catch up missed schedule windows in capped batches after recovery.",
+  skip_missed: "Ignorer les fenêtres manquées pendant la pause du planificateur ou de la routine.",
+  enqueue_missed_with_cap: "Rattraper les fenêtres manquées par lots limités après la reprise.",
 };
 
 function autoResizeTextarea(element: HTMLTextAreaElement | null) {
@@ -145,13 +145,13 @@ export function buildRoutineGroups(
     const groups = groupBy(routines, (routine) => routine.projectId ?? "__no_project");
     return Object.keys(groups)
       .sort((left, right) => {
-        const leftLabel = left === "__no_project" ? "No project" : (projectById.get(left)?.name ?? "Unknown project");
-        const rightLabel = right === "__no_project" ? "No project" : (projectById.get(right)?.name ?? "Unknown project");
+        const leftLabel = left === "__no_project" ? "Sans projet" : (projectById.get(left)?.name ?? "Projet inconnu");
+        const rightLabel = right === "__no_project" ? "Sans projet" : (projectById.get(right)?.name ?? "Projet inconnu");
         return leftLabel.localeCompare(rightLabel);
       })
       .map((key) => ({
         key,
-        label: key === "__no_project" ? "No project" : (projectById.get(key)?.name ?? "Unknown project"),
+        label: key === "__no_project" ? "Sans projet" : (projectById.get(key)?.name ?? "Projet inconnu"),
         items: groups[key]!,
       }));
   }
@@ -159,13 +159,13 @@ export function buildRoutineGroups(
   const groups = groupBy(routines, (routine) => routine.assigneeAgentId ?? "__unassigned");
   return Object.keys(groups)
     .sort((left, right) => {
-      const leftLabel = left === "__unassigned" ? "Unassigned" : (agentById.get(left)?.name ?? "Unknown agent");
-      const rightLabel = right === "__unassigned" ? "Unassigned" : (agentById.get(right)?.name ?? "Unknown agent");
+      const leftLabel = left === "__unassigned" ? "Non assigné" : (agentById.get(left)?.name ?? "Agent inconnu");
+      const rightLabel = right === "__unassigned" ? "Non assigné" : (agentById.get(right)?.name ?? "Agent inconnu");
       return leftLabel.localeCompare(rightLabel);
     })
     .map((key) => ({
       key,
-      label: key === "__unassigned" ? "Unassigned" : (agentById.get(key)?.name ?? "Unknown agent"),
+      label: key === "__unassigned" ? "Non assigné" : (agentById.get(key)?.name ?? "Agent inconnu"),
       items: groups[key]!,
     }));
 }
@@ -310,10 +310,10 @@ export function Routines() {
       setAdvancedOpen(false);
       await queryClient.invalidateQueries({ queryKey: queryKeys.routines.list(selectedCompanyId!) });
       pushToast({
-        title: "Routine created",
+        title: "Routine créée",
         body: routine.assigneeAgentId
-          ? "Add the first trigger to turn it into a live workflow."
-          : "Draft saved. Add a default agent before enabling automation.",
+          ? "Ajoutez le premier déclencheur pour l'activer."
+          : "Brouillon enregistré. Ajoutez un agent par défaut avant d'activer l'automatisation.",
         tone: "success",
       });
       navigate(`/routines/${routine.id}?tab=triggers`);
@@ -343,8 +343,8 @@ export function Routines() {
     },
     onError: (mutationError) => {
       pushToast({
-        title: "Failed to update routine",
-        body: mutationError instanceof Error ? mutationError.message : "Paperclip could not update the routine.",
+        title: "Impossible de mettre à jour la routine",
+        body: mutationError instanceof Error ? mutationError.message : "Kovv-ia n'a pas pu mettre à jour la routine.",
         tone: "error",
       });
     },
@@ -378,8 +378,8 @@ export function Routines() {
     },
     onError: (mutationError) => {
       pushToast({
-        title: "Routine run failed",
-        body: mutationError instanceof Error ? mutationError.message : "Paperclip could not start the routine run.",
+        title: "Échec de l'exécution de la routine",
+        body: mutationError instanceof Error ? mutationError.message : "Kovv-ia n'a pas pu démarrer l'exécution de la routine.",
         tone: "error",
       });
     },
@@ -428,7 +428,7 @@ export function Routines() {
   const recentRunsIssueLinkState = useMemo(
     () =>
       createIssueDetailLocationState(
-        "Recent Runs",
+        "Exécutions récentes",
         buildRoutinesTabHref("runs"),
         "issues",
       ),
@@ -459,8 +459,8 @@ export function Routines() {
   function handleToggleEnabled(routine: RoutineListItem, enabled: boolean) {
     if (!enabled && !routine.assigneeAgentId) {
       pushToast({
-        title: "Default agent required",
-        body: "Set a default agent before enabling routine automation.",
+        title: "Agent par défaut requis",
+        body: "Définissez un agent par défaut avant d'activer l'automatisation de la routine.",
         tone: "warn",
       });
       return;
@@ -479,7 +479,7 @@ export function Routines() {
   }
 
   if (!selectedCompanyId) {
-    return <EmptyState icon={Repeat} message="Select a company to view routines." />;
+    return <EmptyState icon={Repeat} message="Sélectionnez une organisation pour afficher les routines." />;
   }
 
   if (isLoading) {
@@ -494,12 +494,12 @@ export function Routines() {
             Routines
           </h1>
           <p className="text-sm text-muted-foreground">
-            Recurring work definitions that materialize into auditable execution issues.
+            Définitions de travaux récurrents qui se matérialisent en tâches d'exécution traçables.
           </p>
         </div>
         <Button onClick={() => setComposerOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
-          Create routine
+          Créer une routine
         </Button>
       </div>
 
@@ -510,7 +510,7 @@ export function Routines() {
           onValueChange={handleTabChange}
           items={[
             { value: "routines", label: "Routines" },
-            { value: "runs", label: "Recent Runs" },
+            { value: "runs", label: "Exécutions récentes" },
           ]}
         />
         <TabsContent value="routines" className="space-y-4">
@@ -521,18 +521,18 @@ export function Routines() {
             <div className="flex items-center gap-1">
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-xs" title="Sort">
+                  <Button variant="ghost" size="sm" className="text-xs" title="Trier">
                     <ArrowUpDown className="h-3.5 w-3.5 sm:h-3 sm:w-3 sm:mr-1" />
-                    <span className="hidden sm:inline">Sort</span>
+                    <span className="hidden sm:inline">Trier</span>
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent align="end" className="w-44 p-0">
                   <div className="p-2 space-y-0.5">
                     {([
-                      ["updated", "Updated"],
-                      ["created", "Created"],
-                      ["lastRun", "Last run"],
-                      ["title", "Title"],
+                      ["updated", "Modifié"],
+                      ["created", "Créé"],
+                      ["lastRun", "Dernière exécution"],
+                      ["title", "Titre"],
                     ] as const).map(([field, label]) => (
                       <button
                         key={field}
@@ -552,7 +552,7 @@ export function Routines() {
                         <span>{label}</span>
                         {routineViewState.sortField === field ? (
                           <span className="text-xs text-muted-foreground">
-                            {routineViewState.sortDir === "asc" ? "Asc" : "Desc"}
+                            {routineViewState.sortDir === "asc" ? "Croissant" : "Décroissant"}
                           </span>
                         ) : null}
                       </button>
@@ -562,17 +562,17 @@ export function Routines() {
               </Popover>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-xs" title="Group">
+                  <Button variant="ghost" size="sm" className="text-xs" title="Regrouper">
                     <Layers className="h-3.5 w-3.5 sm:h-3 sm:w-3 sm:mr-1" />
-                    <span className="hidden sm:inline">Group</span>
+                    <span className="hidden sm:inline">Regrouper</span>
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent align="end" className="w-44 p-0">
                   <div className="p-2 space-y-0.5">
                     {([
-                      ["project", "Project"],
+                      ["project", "Projet"],
                       ["assignee", "Agent"],
-                      ["none", "None"],
+                      ["none", "Aucun"],
                     ] as const).map(([value, label]) => (
                       <button
                         key={value}
@@ -622,9 +622,9 @@ export function Routines() {
         >
           <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 border-b border-border/60 px-5 py-3">
             <div>
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">New routine</p>
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">Nouvelle routine</p>
               <p className="text-sm text-muted-foreground">
-                Define the recurring work first. Default project and agent are optional for draft routines.
+                Définissez d'abord le travail récurrent. Le projet et l'agent par défaut sont optionnels pour les brouillons.
               </p>
             </div>
             <Button
@@ -636,7 +636,7 @@ export function Routines() {
               }}
               disabled={createRoutine.isPending}
             >
-              Cancel
+              Annuler
             </Button>
           </div>
 
@@ -645,7 +645,7 @@ export function Routines() {
               <textarea
                 ref={titleInputRef}
                 className="w-full resize-none overflow-hidden bg-transparent text-xl font-semibold outline-none placeholder:text-muted-foreground/50"
-                placeholder="Routine title"
+                placeholder="Titre de la routine"
                 rows={1}
                 value={draft.title}
                 onChange={(event) => {
@@ -678,16 +678,16 @@ export function Routines() {
             <div className="px-5 pb-3">
               <div className="overflow-x-auto overscroll-x-contain">
                 <div className="inline-flex min-w-full flex-wrap items-center gap-2 text-sm text-muted-foreground sm:min-w-max sm:flex-nowrap">
-                  <span>For</span>
+                  <span>Pour</span>
                   <InlineEntitySelector
                     ref={assigneeSelectorRef}
                     value={draft.assigneeAgentId}
                     options={assigneeOptions}
                     recentOptionIds={recentAssigneeIds}
-                    placeholder="Assignee"
-                    noneLabel="No assignee"
-                    searchPlaceholder="Search assignees..."
-                    emptyMessage="No assignees found."
+                    placeholder="Assigné"
+                    noneLabel="Aucun assigné"
+                    searchPlaceholder="Rechercher des assignés..."
+                    emptyMessage="Aucun assigné trouvé."
                     onChange={(assigneeAgentId) => {
                       if (assigneeAgentId) trackRecentAssignee(assigneeAgentId);
                       setDraft((current) => ({ ...current, assigneeAgentId }));
@@ -710,7 +710,7 @@ export function Routines() {
                           <span className="truncate">{option.label}</span>
                         )
                       ) : (
-                        <span className="text-muted-foreground">Assignee</span>
+                        <span className="text-muted-foreground">Assigné</span>
                       )
                     }
                     renderOption={(option) => {
@@ -724,16 +724,16 @@ export function Routines() {
                       );
                     }}
                   />
-                  <span>in</span>
+                  <span>dans</span>
                   <InlineEntitySelector
                     ref={projectSelectorRef}
                     value={draft.projectId}
                     options={projectOptions}
                     recentOptionIds={recentProjectIds}
-                    placeholder="Project"
-                    noneLabel="No project"
-                    searchPlaceholder="Search projects..."
-                    emptyMessage="No projects found."
+                    placeholder="Projet"
+                    noneLabel="Aucun projet"
+                    searchPlaceholder="Rechercher des projets..."
+                    emptyMessage="Aucun projet trouvé."
                     onChange={(projectId) => {
                       if (projectId) trackRecentProject(projectId);
                       setDraft((current) => ({ ...current, projectId }));
@@ -749,7 +749,7 @@ export function Routines() {
                           <span className="truncate">{option.label}</span>
                         </>
                       ) : (
-                        <span className="text-muted-foreground">Project</span>
+                        <span className="text-muted-foreground">Projet</span>
                       )
                     }
                     renderOption={(option) => {
@@ -775,7 +775,7 @@ export function Routines() {
                 ref={descriptionEditorRef}
                 value={draft.description}
                 onChange={(description) => setDraft((current) => ({ ...current, description }))}
-                placeholder="Add instructions..."
+                placeholder="Ajouter des instructions..."
                 bordered={false}
                 contentClassName="min-h-[160px] text-sm text-muted-foreground"
                 mentions={mentionOptions}
@@ -791,15 +791,15 @@ export function Routines() {
               <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
                 <CollapsibleTrigger className="flex w-full items-center justify-between text-left">
                   <div>
-                    <p className="text-sm font-medium">Advanced delivery settings</p>
-                    <p className="text-sm text-muted-foreground">Keep policy controls secondary to the work definition.</p>
+                    <p className="text-sm font-medium">Paramètres de livraison avancés</p>
+                    <p className="text-sm text-muted-foreground">Les contrôles de politique restent secondaires par rapport à la définition du travail.</p>
                   </div>
                   {advancedOpen ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
                 </CollapsibleTrigger>
                 <CollapsibleContent className="pt-3">
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
-                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">Concurrency</p>
+                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">Concurrence</p>
                       <Select
                         value={draft.concurrencyPolicy}
                         onValueChange={(concurrencyPolicy) => setDraft((current) => ({ ...current, concurrencyPolicy }))}
@@ -816,7 +816,7 @@ export function Routines() {
                       <p className="text-xs text-muted-foreground">{concurrencyPolicyDescriptions[draft.concurrencyPolicy]}</p>
                     </div>
                     <div className="space-y-2">
-                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">Catch-up</p>
+                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">Rattrapage</p>
                       <Select
                         value={draft.catchUpPolicy}
                         onValueChange={(catchUpPolicy) => setDraft((current) => ({ ...current, catchUpPolicy }))}
@@ -840,7 +840,7 @@ export function Routines() {
 
           <div className="shrink-0 flex flex-col gap-3 border-t border-border/60 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="text-sm text-muted-foreground">
-              After creation, Paperclip takes you straight to trigger setup. Draft routines stay paused until you add a default agent.
+              Après la création, Kovv-ia vous redirige directement vers la configuration des déclencheurs. Les routines en brouillon restent en pause tant qu'aucun agent par défaut n'est assigné.
             </div>
             <div className="flex flex-col gap-2 sm:items-end">
               <Button
@@ -851,11 +851,11 @@ export function Routines() {
                 }
               >
                 <Plus className="mr-2 h-4 w-4" />
-                {createRoutine.isPending ? "Creating..." : "Create routine"}
+                {createRoutine.isPending ? "Création..." : "Créer la routine"}
               </Button>
               {createRoutine.isError ? (
                 <p className="text-sm text-destructive">
-                  {createRoutine.error instanceof Error ? createRoutine.error.message : "Failed to create routine"}
+                  {createRoutine.error instanceof Error ? createRoutine.error.message : "Impossible de créer la routine"}
                 </p>
               ) : null}
             </div>
@@ -866,7 +866,7 @@ export function Routines() {
       {error ? (
         <Card>
           <CardContent className="pt-6 text-sm text-destructive">
-            {error instanceof Error ? error.message : "Failed to load routines"}
+            {error instanceof Error ? error.message : "Impossible de charger les routines"}
           </CardContent>
         </Card>
       ) : null}
@@ -877,7 +877,7 @@ export function Routines() {
             <div className="py-12">
               <EmptyState
                 icon={Repeat}
-                message="No routines yet. Use Create routine to define the first recurring workflow."
+                message="Aucune routine pour l'instant. Utilisez « Créer une routine » pour définir le premier workflow récurrent."
               />
             </div>
           ) : (

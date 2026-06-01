@@ -41,10 +41,10 @@ import { ChoosePathButton } from "./PathInstructionsModal";
 
 const projectStatuses = [
   { value: "backlog", label: "Backlog" },
-  { value: "planned", label: "Planned" },
-  { value: "in_progress", label: "In Progress" },
-  { value: "completed", label: "Completed" },
-  { value: "cancelled", label: "Cancelled" },
+  { value: "planned", label: "Planifié" },
+  { value: "in_progress", label: "En cours" },
+  { value: "completed", label: "Terminé" },
+  { value: "cancelled", label: "Annulé" },
 ];
 
 export function NewProjectDialog() {
@@ -150,11 +150,11 @@ export function NewProjectDialog() {
     const repoUrl = workspaceRepoUrl.trim();
 
     if (localPath && !isAbsolutePath(localPath)) {
-      setWorkspaceError("Local folder must be a full absolute path.");
+      setWorkspaceError("Le dossier local doit être un chemin absolu complet.");
       return;
     }
     if (repoUrl && !looksLikeRepoUrl(repoUrl)) {
-      setWorkspaceError("Repo must use a valid GitHub or GitHub Enterprise repo URL.");
+      setWorkspaceError("Le dépôt doit utiliser une URL valide de dépôt GitHub ou GitHub Enterprise.");
       return;
     }
 
@@ -224,7 +224,7 @@ export function NewProjectDialog() {
               </span>
             )}
             <span className="text-muted-foreground/60">&rsaquo;</span>
-            <span>New project</span>
+            <span>Nouveau projet</span>
           </div>
           <div className="flex items-center gap-1">
             <Button
@@ -250,7 +250,7 @@ export function NewProjectDialog() {
         <div className="px-4 pt-4 pb-2 shrink-0">
           <input
             className="w-full text-lg font-semibold bg-transparent outline-none placeholder:text-muted-foreground/50"
-            placeholder="Project name"
+            placeholder="Nom du projet"
             value={name}
             onChange={(e) => setName(e.target.value)}
             onKeyDown={(e) => {
@@ -269,7 +269,7 @@ export function NewProjectDialog() {
             ref={descriptionEditorRef}
             value={description}
             onChange={setDescription}
-            placeholder="Add description..."
+            placeholder="Ajouter une description..."
             bordered={false}
             mentions={mentionOptions}
             contentClassName={cn("text-sm text-muted-foreground", expanded ? "min-h-[220px]" : "min-h-[120px]")}
@@ -283,14 +283,14 @@ export function NewProjectDialog() {
         <div className="px-4 pt-3 pb-3 space-y-3 border-t border-border">
           <div>
             <div className="mb-1 flex items-center gap-1.5">
-              <label className="block text-xs text-muted-foreground">Repo URL</label>
-              <span className="text-xs text-muted-foreground/50">optional</span>
+              <label className="block text-xs text-muted-foreground">URL du dépôt</label>
+              <span className="text-xs text-muted-foreground/50">optionnel</span>
               <Tooltip delayDuration={300}>
                 <TooltipTrigger asChild>
                   <HelpCircle className="h-3 w-3 text-muted-foreground/50 cursor-help" />
                 </TooltipTrigger>
                 <TooltipContent side="top" className="max-w-[240px] text-xs">
-                  Link a GitHub repository so agents can clone, read, and push code for this project.
+                  Liez un dépôt GitHub afin que les agents puissent cloner, lire et pousser du code pour ce projet.
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -304,14 +304,14 @@ export function NewProjectDialog() {
 
           <div>
             <div className="mb-1 flex items-center gap-1.5">
-              <label className="block text-xs text-muted-foreground">Local folder</label>
-              <span className="text-xs text-muted-foreground/50">optional</span>
+              <label className="block text-xs text-muted-foreground">Dossier local</label>
+              <span className="text-xs text-muted-foreground/50">optionnel</span>
               <Tooltip delayDuration={300}>
                 <TooltipTrigger asChild>
                   <HelpCircle className="h-3 w-3 text-muted-foreground/50 cursor-help" />
                 </TooltipTrigger>
                 <TooltipContent side="top" className="max-w-[240px] text-xs">
-                  Set an absolute path on this machine where local agents will read and write files for this project.
+                  Définissez un chemin absolu sur cette machine où les agents locaux liront et écriront les fichiers de ce projet.
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -366,7 +366,7 @@ export function NewProjectDialog() {
               <button
                 className="text-muted-foreground hover:text-foreground"
                 onClick={() => setGoalIds((prev) => prev.filter((id) => id !== goal.id))}
-                aria-label={`Remove goal ${goal.title}`}
+                aria-label={`Retirer l'objectif ${goal.title}`}
                 type="button"
               >
                 <X className="h-3 w-3" />
@@ -381,7 +381,7 @@ export function NewProjectDialog() {
                 disabled={selectedGoals.length > 0 && availableGoals.length === 0}
               >
                 {selectedGoals.length > 0 ? <Plus className="h-3 w-3 text-muted-foreground" /> : <Target className="h-3 w-3 text-muted-foreground" />}
-                {selectedGoals.length > 0 ? "+ Goal" : "Goal"}
+                {selectedGoals.length > 0 ? "+ Objectif" : "Objectif"}
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-56 p-1" align="start">
@@ -390,7 +390,7 @@ export function NewProjectDialog() {
                   className="flex items-center gap-2 w-full px-2 py-1.5 text-xs rounded hover:bg-accent/50 text-muted-foreground"
                   onClick={() => setGoalOpen(false)}
                 >
-                  No goal
+                  Aucun objectif
                 </button>
               )}
               {availableGoals.map((g) => (
@@ -407,7 +407,7 @@ export function NewProjectDialog() {
               ))}
               {selectedGoals.length > 0 && availableGoals.length === 0 && (
                 <div className="px-2 py-1.5 text-xs text-muted-foreground">
-                  All goals already selected.
+                  Tous les objectifs sont déjà sélectionnés.
                 </div>
               )}
             </PopoverContent>
@@ -429,7 +429,7 @@ export function NewProjectDialog() {
         {/* Footer */}
         <div className="flex items-center justify-between px-4 py-2.5 border-t border-border">
           {createProject.isError ? (
-            <p className="text-xs text-destructive">Failed to create project.</p>
+            <p className="text-xs text-destructive">Échec de la création du projet.</p>
           ) : (
             <span />
           )}
@@ -438,7 +438,7 @@ export function NewProjectDialog() {
             disabled={!name.trim() || createProject.isPending}
             onClick={handleSubmit}
           >
-            {createProject.isPending ? "Creating…" : "Create project"}
+            {createProject.isPending ? "Création…" : "Créer le projet"}
           </Button>
         </div>
       </DialogContent>

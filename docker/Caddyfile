@@ -1,0 +1,30 @@
+{$DOMAIN} {
+	# Automatic HTTPS via Let's Encrypt.
+	# Default: HTTP-01 challenge — needs ports 80 and 443 open to the internet
+	# and a DNS A record for {$DOMAIN} pointing at this VPS. No extra config needed.
+	#
+	# Optional Cloudflare DNS-01 challenge (only if your DNS is on Cloudflare):
+	#   1. Build a custom Caddy image that bundles the cloudflare DNS plugin
+	#      (the stock caddy:2-alpine image does NOT include it), e.g. via xcaddy:
+	#        caddy-dns/cloudflare
+	#   2. Set CLOUDFLARE_API_TOKEN in .env.prod (Zone:Edit permission).
+	#   3. Uncomment the tls block below.
+	# tls {
+	# 	dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	# }
+
+	# Security headers
+	header X-Frame-Options "SAMEORIGIN"
+	header X-Content-Type-Options "nosniff"
+	header Referrer-Policy "strict-origin-when-cross-origin"
+	header Permissions-Policy "accelerometer=(), camera=(), microphone=(), geolocation=(), magnetometer=(), payment=(), usb=()"
+	header Strict-Transport-Security "max-age=2592000; includeSubDomains"
+
+	# Reverse proxy to the Kovv-ia (paperclip) service.
+	# Caddy v2 proxies WebSocket upgrades transparently — no manual Connection/Upgrade
+	# headers required (setting them manually would break ordinary HTTP requests).
+	reverse_proxy paperclip:3100 {
+		# Disable response buffering so streaming / live updates flush immediately.
+		flush_interval -1
+	}
+}

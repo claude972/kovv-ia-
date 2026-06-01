@@ -45,9 +45,9 @@ import type { Project } from "@paperclipai/shared";
 type ProjectSidebarSlot = ReturnType<typeof usePluginSlots>["slots"][number];
 
 const PROJECT_SORT_CHOICES: SidebarSectionRadioChoice[] = [
-  { value: "top", label: "Top" },
-  { value: "alphabetical", label: "Alphabetical" },
-  { value: "recent", label: "Recent" },
+  { value: "top", label: "Favoris" },
+  { value: "alphabetical", label: "Alphabétique" },
+  { value: "recent", label: "Récent" },
 ];
 const REORDER_POINTER_MEDIA = "(hover: hover) and (pointer: fine)";
 
@@ -144,7 +144,7 @@ function ProjectItem({
             style={{ backgroundColor: project.color ?? "#6366f1" }}
           />
           <span className="flex-1 truncate">{project.name}</span>
-          {project.pauseReason === "budget" ? <BudgetSidebarMarker title="Project paused by budget" /> : null}
+          {project.pauseReason === "budget" ? <BudgetSidebarMarker title="Projet mis en pause par le budget" /> : null}
         </NavLink>
 
         <DropdownMenu>
@@ -158,7 +158,7 @@ function ProjectItem({
                   ? "opacity-100"
                   : "pointer-events-none opacity-0 group-hover/project:pointer-events-auto group-hover/project:opacity-100 group-focus-within/project:pointer-events-auto group-focus-within/project:opacity-100",
               )}
-              aria-label={`Open actions for ${project.name}`}
+              aria-label={`Ouvrir les actions pour ${project.name}`}
             >
               <MoreHorizontal className="h-3.5 w-3.5" />
             </Button>
@@ -172,7 +172,7 @@ function ProjectItem({
               disabled={leaving}
             >
               {leaving ? <Loader2 className="size-4 motion-safe:animate-spin" /> : <LogOut className="size-4" />}
-              <span>{leaving ? "Leaving..." : "Leave project"}</span>
+              <span>{leaving ? "Départ en cours..." : "Quitter le projet"}</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -383,20 +383,20 @@ export function SidebarProjects() {
 
   return (
     <SidebarSection
-      label="Projects"
+      label="Projets"
       collapsible={{ open, onOpenChange: setOpen }}
       headerAction={{
-        ariaLabel: "New project",
+        ariaLabel: "Nouveau projet",
         icon: Plus,
         onClick: openNewProject,
       }}
       menu={{
-        ariaLabel: "Projects section actions",
+        ariaLabel: "Actions de la section Projets",
         actions: [
-          { type: "item", label: "Browse projects", icon: FolderOpen, href: "/projects" },
+          { type: "item", label: "Parcourir les projets", icon: FolderOpen, href: "/projects" },
           { type: "separator" },
         ],
-        radioLabel: "Project sort",
+        radioLabel: "Tri des projets",
         radioChoices: PROJECT_SORT_CHOICES,
         radioValue: sortMode,
         onRadioValueChange: persistSortMode,

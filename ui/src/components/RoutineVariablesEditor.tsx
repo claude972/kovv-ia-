@@ -77,7 +77,7 @@ export function RoutineVariablesEditor({
         <div>
           <p className="text-sm font-medium">Variables</p>
           <p className="text-xs text-muted-foreground">
-            Detected from `{"{{name}}"}` placeholders in the routine title and instructions.
+            Détectées à partir des espaces réservés `{"{{nom}}"}` dans le titre et les instructions de la routine.
           </p>
         </div>
         {open ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
@@ -90,13 +90,13 @@ export function RoutineVariablesEditor({
                 {`{{${variable.name}}}`}
               </Badge>
               <span className="text-xs text-muted-foreground">
-                Prompt the user for this value before each manual run.
+                Demander cette valeur à l'utilisateur avant chaque exécution manuelle.
               </span>
             </div>
 
             <div className="grid gap-3 md:grid-cols-2">
               <div className="space-y-1.5">
-                <Label className="text-xs">Label</Label>
+                <Label className="text-xs">Libellé</Label>
                 <Input
                   value={variable.label ?? ""}
                   onChange={(event) => onChange(updateVariableList(syncedVariables, variable.name, (current) => ({
@@ -131,7 +131,7 @@ export function RoutineVariablesEditor({
 
               <div className="space-y-1.5 md:col-span-2">
                 <div className="flex items-center justify-between gap-3">
-                  <Label className="text-xs">Default value</Label>
+                  <Label className="text-xs">Valeur par défaut</Label>
                   <label className="flex items-center gap-2 text-xs text-muted-foreground">
                     <input
                       type="checkbox"
@@ -141,7 +141,7 @@ export function RoutineVariablesEditor({
                         required: event.target.checked,
                       })))}
                     />
-                    Required
+                    Obligatoire
                   </label>
                 </div>
 
@@ -166,9 +166,9 @@ export function RoutineVariablesEditor({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="__unset__">No default</SelectItem>
-                      <SelectItem value="true">True</SelectItem>
-                      <SelectItem value="false">False</SelectItem>
+                      <SelectItem value="__unset__">Aucune valeur par défaut</SelectItem>
+                      <SelectItem value="true">Vrai</SelectItem>
+                      <SelectItem value="false">Faux</SelectItem>
                     </SelectContent>
                   </Select>
                 ) : variable.type === "select" ? (
@@ -192,7 +192,7 @@ export function RoutineVariablesEditor({
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-xs">Default option</Label>
+                      <Label className="text-xs">Option par défaut</Label>
                       <Select
                         value={typeof variable.defaultValue === "string" ? variable.defaultValue : "__unset__"}
                         onValueChange={(next) => onChange(updateVariableList(syncedVariables, variable.name, (current) => ({
@@ -201,10 +201,10 @@ export function RoutineVariablesEditor({
                         })))}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="No default" />
+                          <SelectValue placeholder="Aucune valeur par défaut" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="__unset__">No default</SelectItem>
+                          <SelectItem value="__unset__">Aucune valeur par défaut</SelectItem>
                           {variable.options.map((option) => (
                             <SelectItem key={option} value={option}>{option}</SelectItem>
                           ))}
@@ -220,7 +220,7 @@ export function RoutineVariablesEditor({
                       ...current,
                       defaultValue: event.target.value || null,
                     })))}
-                    placeholder={variable.type === "number" ? "42" : "Default value"}
+                    placeholder={variable.type === "number" ? "42" : "Valeur par défaut"}
                   />
                 )}
               </div>
@@ -242,12 +242,12 @@ const BUILTIN_VARIABLE_DOCS: BuiltinVariableDoc[] = [
   {
     name: "date",
     example: "2026-04-28",
-    description: "Current date in YYYY-MM-DD format (UTC) at the time the routine runs.",
+    description: "Date actuelle au format AAAA-MM-JJ (UTC) au moment de l'exécution de la routine.",
   },
   {
     name: "timestamp",
     example: "April 28, 2026 at 12:17 PM UTC",
-    description: "Human-readable date and time (UTC) at the time the routine runs.",
+    description: "Date et heure lisibles (UTC) au moment de l'exécution de la routine.",
   },
 ];
 
@@ -258,13 +258,13 @@ export function RoutineVariablesHint() {
     <>
       <div className="flex items-center justify-between gap-2 rounded-lg border border-dashed border-border/70 px-3 py-2 text-xs text-muted-foreground">
         <span>
-          Use `{"{{variable_name}}"}` placeholders in the instructions to prompt for inputs when the routine runs.
+          Utilisez des espaces réservés `{"{{nom_variable}}"}` dans les instructions pour demander des entrées lors de l'exécution de la routine.
         </span>
         <button
           type="button"
           onClick={() => setHelpOpen(true)}
           className="shrink-0 rounded-full p-0.5 text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          aria-label="Show variable help"
+          aria-label="Afficher l'aide sur les variables"
         >
           <HelpCircle className="h-3.5 w-3.5" />
         </button>
@@ -273,47 +273,46 @@ export function RoutineVariablesHint() {
       <Dialog open={helpOpen} onOpenChange={setHelpOpen}>
         <DialogContent className="sm:max-w-xl">
           <DialogHeader>
-            <DialogTitle>Routine variables</DialogTitle>
+            <DialogTitle>Variables de routine</DialogTitle>
             <DialogDescription>
-              How to prompt for inputs and which variables Paperclip fills in automatically.
+              Comment solliciter les entrées et quelles variables Kovv-ia renseigne automatiquement.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-5 text-sm">
             <section className="space-y-2">
               <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                Custom variables
+                Variables personnalisées
               </h3>
               <p className="text-muted-foreground">
-                Type{" "}
+                Saisissez{" "}
                 <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs text-foreground">
-                  {"{{variable_name}}"}
+                  {"{{nom_variable}}"}
                 </code>{" "}
-                anywhere in the title or instructions. Paperclip detects each placeholder, lists it
-                under <span className="font-medium text-foreground">Variables</span>, and prompts
-                for a value before each run.
+                n'importe où dans le titre ou les instructions. Kovv-ia détecte chaque espace réservé, le liste
+                sous <span className="font-medium text-foreground">Variables</span> et demande
+                une valeur avant chaque exécution.
               </p>
               <ul className="list-disc space-y-1 pl-5 text-muted-foreground">
-                <li>Names must start with a letter and may use letters, numbers, and underscores.</li>
-                <li>Pick a type (text, textarea, number, boolean, select), default value, and whether it is required.</li>
-                <li>The same name reused across the title and instructions is treated as one variable.</li>
+                <li>Les noms doivent commencer par une lettre et peuvent contenir des lettres, des chiffres et des underscores.</li>
+                <li>Choisissez un type (text, textarea, number, boolean, select), une valeur par défaut et si la variable est obligatoire.</li>
+                <li>Le même nom réutilisé dans le titre et les instructions est traité comme une seule variable.</li>
               </ul>
             </section>
 
             <section className="space-y-2">
               <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                Built-in variables
+                Variables intégrées
               </h3>
               <p className="text-muted-foreground">
-                These are filled in automatically — no setup needed and they will not appear in the
-                Variables list.
+                Celles-ci sont renseignées automatiquement — aucune configuration nécessaire et elles n'apparaîtront pas dans la liste des variables.
               </p>
               <div className="overflow-hidden rounded-lg border border-border/70">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-muted/40 text-muted-foreground">
                     <tr>
-                      <th className="px-3 py-2 font-medium">Placeholder</th>
-                      <th className="px-3 py-2 font-medium">Example</th>
+                      <th className="px-3 py-2 font-medium">Espace réservé</th>
+                      <th className="px-3 py-2 font-medium">Exemple</th>
                       <th className="px-3 py-2 font-medium">Description</th>
                     </tr>
                   </thead>

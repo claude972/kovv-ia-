@@ -23,8 +23,8 @@ function CliFallback({ hasActiveInvite = false }: { hasActiveInvite?: boolean })
       </div>
       <p className="mt-2 text-sm text-muted-foreground">
         {hasActiveInvite
-          ? "A bootstrap invite is already active. Check your Paperclip startup logs for the first-admin URL, or run this command on the host to rotate it:"
-          : "Run this command on the host that runs Paperclip to print a one-time first-admin invite URL:"}
+          ? "Une invitation d'amorçage est déjà active. Consultez les journaux de démarrage de Kovv-ia pour l'URL du premier administrateur, ou exécutez cette commande sur l'hôte pour la régénérer :"
+          : "Exécutez cette commande sur l'hôte qui fait tourner Kovv-ia pour afficher une URL d'invitation unique pour le premier administrateur :"}
       </p>
       <pre className="mt-3 overflow-x-auto rounded-md border border-border bg-muted/30 p-3 font-mono text-xs">
 {BOOTSTRAP_FALLBACK_COMMAND}
@@ -75,7 +75,7 @@ export function BootstrapPendingPage({
   if (!claimAvailable) {
     return (
       <StateChrome>
-        <h1 className="text-xl font-semibold">This Paperclip is waiting on its first admin</h1>
+        <h1 className="text-xl font-semibold">Cette instance Kovv-ia attend son premier administrateur</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           This instance runs in invite-only mode. The operator must generate a one-time first-admin invite URL
           from the host. Once you have the link, open it from this browser to finish setup.
@@ -119,10 +119,10 @@ export function BootstrapPendingPage({
   if (!session) {
     return (
       <StateChrome>
-        <h1 className="text-xl font-semibold">Finish setting up this Paperclip</h1>
+        <h1 className="text-xl font-semibold">Finalisez la configuration de Kovv-ia</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          No admin has claimed this instance yet. Sign in or create your Paperclip account to become the first
-          admin from this browser.
+          Aucun administrateur n'a encore revendiqué cette instance. Connectez-vous ou créez votre compte Kovv-ia pour devenir le premier
+          administrateur depuis ce navigateur.
         </p>
         <div className="mt-5">
           <Button asChild>
@@ -138,9 +138,9 @@ export function BootstrapPendingPage({
   const isClaiming = claimState === "claiming";
   return (
     <StateChrome>
-      <h1 className="text-xl font-semibold">Finish setting up this Paperclip</h1>
+      <h1 className="text-xl font-semibold">Finalisez la configuration de Kovv-ia</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        No admin has claimed this instance yet. Claim it now to become the first admin and start onboarding.
+        Aucun administrateur n'a encore revendiqué cette instance. Revendiquez-la maintenant pour devenir le premier administrateur et démarrer l'intégration.
       </p>
       <div className="mt-5 flex flex-wrap items-center gap-3">
         <Button onClick={onClaim} disabled={isClaiming}>

@@ -8,7 +8,7 @@ import { ChoosePathButton } from "../../components/PathInstructionsModal";
 const inputClass =
   "w-full rounded-md border border-border px-2.5 py-1.5 bg-transparent outline-none text-sm font-mono placeholder:text-muted-foreground/40";
 const instructionsFileHint =
-  "Absolute path to a markdown file (e.g. AGENTS.md) that defines this agent's behavior. Paperclip stages it into the Grok workspace as Agents.md when possible.";
+  "Chemin absolu vers un fichier Markdown (ex. AGENTS.md) définissant le comportement de cet agent. Kovv-ia l'intègre dans l'espace de travail Grok sous le nom Agents.md si possible.";
 
 export function GrokLocalConfigFields({
   isCreate,

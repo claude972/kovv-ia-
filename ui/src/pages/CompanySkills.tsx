@@ -187,19 +187,19 @@ function sourceMeta(sourceBadge: CompanySkillSourceBadge, sourceLabel: string | 
 
   switch (sourceBadge) {
     case "skills_sh":
-      return { icon: VercelMark, label: sourceLabel ?? "skills.sh", managedLabel: "skills.sh managed" };
+      return { icon: VercelMark, label: sourceLabel ?? "skills.sh", managedLabel: "Géré par skills.sh" };
     case "github":
       return isSkillsShManaged
-        ? { icon: VercelMark, label: sourceLabel ?? "skills.sh", managedLabel: "skills.sh managed" }
-        : { icon: Github, label: sourceLabel ?? "GitHub", managedLabel: "GitHub managed" };
+        ? { icon: VercelMark, label: sourceLabel ?? "skills.sh", managedLabel: "Géré par skills.sh" }
+        : { icon: Github, label: sourceLabel ?? "GitHub", managedLabel: "Géré par GitHub" };
     case "url":
-      return { icon: Link2, label: sourceLabel ?? "URL", managedLabel: "URL managed" };
+      return { icon: Link2, label: sourceLabel ?? "URL", managedLabel: "Géré par URL" };
     case "local":
-      return { icon: Folder, label: sourceLabel ?? "Folder", managedLabel: "Folder managed" };
+      return { icon: Folder, label: sourceLabel ?? "Dossier", managedLabel: "Géré par dossier" };
     case "paperclip":
-      return { icon: Paperclip, label: sourceLabel ?? "Paperclip", managedLabel: "Paperclip managed" };
+      return { icon: Paperclip, label: sourceLabel ?? "Kovv-ia", managedLabel: "Géré par Kovv-ia" };
     default:
-      return { icon: Boxes, label: sourceLabel ?? "Catalog", managedLabel: "Catalog managed" };
+      return { icon: Boxes, label: sourceLabel ?? "Catalogue", managedLabel: "Géré par catalogue" };
   }
 }
 
@@ -216,13 +216,13 @@ function middleTruncate(value: string, maxLength = 72) {
 
 function formatProjectScanSummary(result: CompanySkillProjectScanResult) {
   const parts = [
-    `${result.discovered} found`,
-    `${result.imported.length} imported`,
-    `${result.updated.length} updated`,
+    `${result.discovered} trouvée${result.discovered !== 1 ? "s" : ""}`,
+    `${result.imported.length} importée${result.imported.length !== 1 ? "s" : ""}`,
+    `${result.updated.length} mise${result.updated.length !== 1 ? "s" : ""} à jour`,
   ];
-  if (result.conflicts.length > 0) parts.push(`${result.conflicts.length} conflicts`);
-  if (result.skipped.length > 0) parts.push(`${result.skipped.length} skipped`);
-  return `${parts.join(", ")} across ${result.scannedWorkspaces} workspace${result.scannedWorkspaces === 1 ? "" : "s"}.`;
+  if (result.conflicts.length > 0) parts.push(`${result.conflicts.length} conflit${result.conflicts.length !== 1 ? "s" : ""}`);
+  if (result.skipped.length > 0) parts.push(`${result.skipped.length} ignorée${result.skipped.length !== 1 ? "s" : ""}`);
+  return `${parts.join(", ")} sur ${result.scannedWorkspaces} espace${result.scannedWorkspaces !== 1 ? "s" : ""} de travail.`;
 }
 
 function fileIcon(kind: CompanySkillFileInventoryEntry["kind"]) {
@@ -291,11 +291,11 @@ function parentDirectoryPaths(filePath: string) {
 type SourceFilter = "all" | "company" | "bundled" | "optional" | "external";
 
 const SOURCE_FILTER_LABELS: Record<SourceFilter, string> = {
-  all: "All",
-  company: "Company",
-  bundled: "Bundled",
-  optional: "Optional",
-  external: "External",
+  all: "Tous",
+  company: "Entreprise",
+  bundled: "Inclus",
+  optional: "Optionnel",
+  external: "Externe",
 };
 
 function readonlyMetadataValue(metadata: Record<string, unknown> | null | undefined, key: string): string | null {
@@ -353,7 +353,7 @@ function SourceFilterMenu({
           variant="ghost"
           size="icon-sm"
           className={cn("relative shrink-0", activeFilterCount > 0 && "text-blue-600 dark:text-blue-400")}
-          title={activeFilterCount > 0 ? `Filters: ${activeFilterCount}` : "Filter"}
+          title={activeFilterCount > 0 ? `Filtres : ${activeFilterCount}` : "Filtrer"}
         >
           <Filter className="h-3.5 w-3.5" />
           {activeFilterCount > 0 ? (

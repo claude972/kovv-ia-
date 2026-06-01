@@ -633,7 +633,7 @@ const SecretField = React.memo(({
       label={label}
       description={
         description ||
-        "Pick an existing company secret, or paste a raw value (Paperclip will store it as a secret on save)."
+        "Choisissez un secret d'entreprise existant, ou collez une valeur brute (Kovv-ia la stockera comme secret à l'enregistrement)."
       }
       required={isRequired}
       error={error}

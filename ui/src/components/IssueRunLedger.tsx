@@ -118,7 +118,7 @@ const PENDING_LIVENESS_COPY: LivenessCopy = {
 const RETRY_PENDING_LIVENESS_COPY: LivenessCopy = {
   label: "Retry pending",
   tone: "border-cyan-500/30 bg-cyan-500/10 text-cyan-700 dark:text-cyan-300",
-  description: "Paperclip queued an automatic retry that has not started yet.",
+  description: "Kovv-ia a mis en file d'attente une nouvelle tentative automatique qui n'a pas encore démarré.",
 };
 
 const MISSING_LIVENESS_COPY: LivenessCopy = {
@@ -395,7 +395,7 @@ function watchdogDecisionErrorMessage(error: unknown) {
   }
   return error instanceof Error && error.message.trim().length > 0
     ? error.message
-    : "Paperclip could not record the watchdog decision.";
+    : "Kovv-ia n'a pas pu enregistrer la décision de surveillance.";
 }
 
 export function IssueRunLedger({

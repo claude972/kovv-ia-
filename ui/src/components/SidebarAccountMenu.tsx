@@ -130,8 +130,8 @@ export function SidebarAccountMenu({
 
   const displayName = session?.user.name?.trim() || "Board";
   const secondaryLabel =
-    session?.user.email?.trim() || (deploymentMode === "authenticated" ? "Signed in" : "Local workspace board");
-  const accountBadge = deploymentMode === "authenticated" ? "Account" : "Local";
+    session?.user.email?.trim() || (deploymentMode === "authenticated" ? "Connecté" : "Espace de travail local");
+  const accountBadge = deploymentMode === "authenticated" ? "Compte" : "Local";
   const initials = deriveInitials(displayName);
   const profileHref = `/u/${deriveUserSlug(session?.user.name, session?.user.email, session?.user.id)}`;
 
@@ -147,7 +147,7 @@ export function SidebarAccountMenu({
           <button
             type="button"
             className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-[13px] font-medium text-foreground/80 transition-colors hover:bg-accent/50 hover:text-foreground"
-            aria-label="Open account menu"
+            aria-label="Ouvrir le menu du compte"
           >
             <Avatar size="sm">
               {session?.user.image ? <AvatarImage src={session.user.image} alt={displayName} /> : null}
@@ -180,44 +180,44 @@ export function SidebarAccountMenu({
                 </div>
                 <p className="truncate text-sm text-muted-foreground">{secondaryLabel}</p>
                 {version ? (
-                  <p className="mt-1 text-xs text-muted-foreground">Paperclip v{version}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">Kovv-ia v{version}</p>
                 ) : null}
               </div>
             </div>
 
             <div className="mt-4 space-y-1">
               <MenuAction
-                label="View profile"
-                description="Open your activity, task, and usage ledger."
+                label="Voir le profil"
+                description="Ouvrir votre journal d'activité, de tâches et d'utilisation."
                 icon={UserRound}
                 href={profileHref}
                 onClick={closeNavigationChrome}
               />
               <MenuAction
-                label="Edit profile"
-                description="Update your display name and avatar."
+                label="Modifier le profil"
+                description="Mettre à jour votre nom d'affichage et votre avatar."
                 icon={UserRoundPen}
                 href={PROFILE_SETTINGS_PATH}
                 onClick={closeNavigationChrome}
               />
               <MenuAction
-                label="Instance settings"
-                description="Jump back to the last settings page you opened."
+                label="Paramètres de l'instance"
+                description="Revenir à la dernière page de paramètres ouverte."
                 icon={Settings}
                 href={instanceSettingsTarget}
                 onClick={closeNavigationChrome}
               />
               <MenuAction
                 label="Documentation"
-                description="Open Paperclip docs in a new tab."
+                description="Ouvrir la documentation Kovv-ia dans un nouvel onglet."
                 icon={BookOpen}
                 href={DOCS_URL}
                 external
                 onClick={() => setOpen(false)}
               />
               <MenuAction
-                label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-                description="Toggle the app appearance."
+                label={theme === "dark" ? "Passer en mode clair" : "Passer en mode sombre"}
+                description="Basculer l'apparence de l'application."
                 icon={theme === "dark" ? Sun : Moon}
                 onClick={() => {
                   toggleTheme();
@@ -239,10 +239,10 @@ export function SidebarAccountMenu({
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block text-sm font-medium text-foreground">
-                      {signOutMutation.isPending ? "Signing out..." : "Sign out"}
+                      {signOutMutation.isPending ? "Déconnexion..." : "Se déconnecter"}
                     </span>
                     <span className="block text-xs text-muted-foreground">
-                      End this browser session.
+                      Terminer cette session de navigateur.
                     </span>
                   </span>
                 </button>

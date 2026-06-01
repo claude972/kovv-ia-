@@ -31,14 +31,14 @@ export function InstanceGeneralSettings() {
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.session });
     },
     onError: (error) => {
-      setActionError(error instanceof Error ? error.message : "Failed to sign out.");
+      setActionError(error instanceof Error ? error.message : "Échec de la déconnexion.");
     },
   });
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Instance Settings" },
-      { label: "General" },
+      { label: "Paramètres de l'instance" },
+      { label: "Général" },
     ]);
   }, [setBreadcrumbs]);
 
@@ -59,12 +59,12 @@ export function InstanceGeneralSettings() {
       await queryClient.invalidateQueries({ queryKey: queryKeys.instance.generalSettings });
     },
     onError: (error) => {
-      setActionError(error instanceof Error ? error.message : "Failed to update general settings.");
+      setActionError(error instanceof Error ? error.message : "Échec de la mise à jour des paramètres généraux.");
     },
   });
 
   if (generalQuery.isLoading) {
-    return <div className="text-sm text-muted-foreground">Loading general settings...</div>;
+    return <div className="text-sm text-muted-foreground">Chargement des paramètres généraux...</div>;
   }
 
   if (generalQuery.error) {
@@ -72,7 +72,7 @@ export function InstanceGeneralSettings() {
       <div className="text-sm text-destructive">
         {generalQuery.error instanceof Error
           ? generalQuery.error.message
-          : "Failed to load general settings."}
+          : "Échec du chargement des paramètres généraux."}
       </div>
     );
   }
@@ -90,8 +90,7 @@ export function InstanceGeneralSettings() {
           <h1 className="text-lg font-semibold">General</h1>
         </div>
         <p className="text-sm text-muted-foreground">
-          Configure instance-wide preferences including log display, keyboard shortcuts, backup
-          retention, and data sharing.
+          Configurez les préférences à l'échelle de l'instance, notamment l'affichage des journaux, les raccourcis clavier, la rétention des sauvegardes et le partage des données.
         </p>
       </div>
 
@@ -104,7 +103,7 @@ export function InstanceGeneralSettings() {
       <section className="rounded-xl border border-border bg-card p-5">
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <h2 className="text-sm font-semibold">Deployment and auth</h2>
+            <h2 className="text-sm font-semibold">Déploiement et authentification</h2>
             <ModeBadge
               deploymentMode={healthQuery.data?.deploymentMode}
               deploymentExposure={healthQuery.data?.deploymentExposure}
@@ -112,23 +111,23 @@ export function InstanceGeneralSettings() {
           </div>
           <div className="text-sm text-muted-foreground">
             {healthQuery.data?.deploymentMode === "local_trusted"
-              ? "Local trusted mode is optimized for a local operator. Browser requests run as local board context and no sign-in is required."
+              ? "Le mode local de confiance est optimisé pour un opérateur local. Les requêtes du navigateur s'exécutent dans le contexte du tableau local et aucune connexion n'est requise."
               : healthQuery.data?.deploymentExposure === "public"
-                ? "Authenticated public mode requires sign-in for board access and is intended for public URLs."
-                : "Authenticated private mode requires sign-in and is intended for LAN, VPN, or other private-network deployments."}
+                ? "Le mode public authentifié requiert une connexion pour accéder au tableau et est destiné aux URL publiques."
+                : "Le mode privé authentifié requiert une connexion et est destiné aux déploiements sur réseau local, VPN ou tout autre réseau privé."}
           </div>
           <div className="grid gap-3 md:grid-cols-3">
             <StatusBox
-              label="Auth readiness"
-              value={healthQuery.data?.authReady ? "Ready" : "Not ready"}
+              label="État de l'authentification"
+              value={healthQuery.data?.authReady ? "Prête" : "Non prête"}
             />
             <StatusBox
-              label="Bootstrap status"
-              value={healthQuery.data?.bootstrapStatus === "bootstrap_pending" ? "Setup required" : "Ready"}
+              label="État du démarrage"
+              value={healthQuery.data?.bootstrapStatus === "bootstrap_pending" ? "Configuration requise" : "Prête"}
             />
             <StatusBox
-              label="Bootstrap invite"
-              value={healthQuery.data?.bootstrapInviteActive ? "Active" : "None"}
+              label="Invitation de démarrage"
+              value={healthQuery.data?.bootstrapInviteActive ? "Active" : "Aucune"}
             />
           </div>
         </div>
@@ -137,18 +136,16 @@ export function InstanceGeneralSettings() {
       <section className="rounded-xl border border-border bg-card p-5">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1.5">
-            <h2 className="text-sm font-semibold">Censor username in logs</h2>
+            <h2 className="text-sm font-semibold">Masquer le nom d'utilisateur dans les journaux</h2>
             <p className="max-w-2xl text-sm text-muted-foreground">
-              Hide the username segment in home-directory paths and similar operator-visible log output. Standalone
-              username mentions outside of paths are not yet masked in the live transcript view. This is off by
-              default.
+              Masque le segment du nom d'utilisateur dans les chemins de répertoire personnel et les sorties de journaux visibles par l'opérateur. Les mentions isolées du nom d'utilisateur hors des chemins ne sont pas encore masquées dans la vue de transcription en direct. Désactivé par défaut.
             </p>
           </div>
           <ToggleSwitch
             checked={censorUsernameInLogs}
             onCheckedChange={() => updateGeneralMutation.mutate({ censorUsernameInLogs: !censorUsernameInLogs })}
             disabled={updateGeneralMutation.isPending}
-            aria-label="Toggle username log censoring"
+            aria-label="Activer/désactiver le masquage du nom d'utilisateur dans les journaux"
           />
         </div>
       </section>
@@ -156,17 +153,16 @@ export function InstanceGeneralSettings() {
       <section className="rounded-xl border border-border bg-card p-5">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1.5">
-            <h2 className="text-sm font-semibold">Keyboard shortcuts</h2>
+            <h2 className="text-sm font-semibold">Raccourcis clavier</h2>
             <p className="max-w-2xl text-sm text-muted-foreground">
-              Enable app keyboard shortcuts, including inbox navigation and global shortcuts like creating issues or
-              toggling panels. This is off by default.
+              Activez les raccourcis clavier de l'application, notamment la navigation dans la boîte de réception et les raccourcis globaux comme la création de tickets ou le basculement des panneaux. Désactivé par défaut.
             </p>
           </div>
           <ToggleSwitch
             checked={keyboardShortcuts}
             onCheckedChange={() => updateGeneralMutation.mutate({ keyboardShortcuts: !keyboardShortcuts })}
             disabled={updateGeneralMutation.isPending}
-            aria-label="Toggle keyboard shortcuts"
+            aria-label="Activer/désactiver les raccourcis clavier"
           />
         </div>
       </section>
@@ -174,16 +170,14 @@ export function InstanceGeneralSettings() {
       <section className="rounded-xl border border-border bg-card p-5">
         <div className="space-y-5">
           <div className="space-y-1.5">
-            <h2 className="text-sm font-semibold">Backup retention</h2>
+            <h2 className="text-sm font-semibold">Rétention des sauvegardes</h2>
             <p className="max-w-2xl text-sm text-muted-foreground">
-              Configure how long automatic database backups are retained. Backups run roughly
-              every hour and are compressed with gzip. Within the daily window all backups are
-              kept; beyond that, one backup per week and one per month are preserved.
+              Configurez la durée de conservation des sauvegardes automatiques de la base de données. Les sauvegardes s'exécutent approximativement toutes les heures et sont compressées avec gzip. Dans la fenêtre quotidienne, toutes les sauvegardes sont conservées ; au-delà, une sauvegarde par semaine et une par mois sont préservées.
             </p>
           </div>
 
           <div className="space-y-1.5">
-            <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Daily</h3>
+            <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Quotidien</h3>
             <div className="flex flex-wrap gap-2">
               {DAILY_RETENTION_PRESETS.map((days) => {
                 const active = backupRetention.dailyDays === days;
@@ -204,7 +198,7 @@ export function InstanceGeneralSettings() {
                       })
                     }
                   >
-                    <div className="text-sm font-medium">{days} days</div>
+                    <div className="text-sm font-medium">{days} jours</div>
                   </button>
                 );
               })}
@@ -212,11 +206,11 @@ export function InstanceGeneralSettings() {
           </div>
 
           <div className="space-y-1.5">
-            <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Weekly</h3>
+            <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Hebdomadaire</h3>
             <div className="flex flex-wrap gap-2">
               {WEEKLY_RETENTION_PRESETS.map((weeks) => {
                 const active = backupRetention.weeklyWeeks === weeks;
-                const label = weeks === 1 ? "1 week" : `${weeks} weeks`;
+                const label = weeks === 1 ? "1 semaine" : `${weeks} semaines`;
                 return (
                   <button
                     key={weeks}
@@ -242,11 +236,11 @@ export function InstanceGeneralSettings() {
           </div>
 
           <div className="space-y-1.5">
-            <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Monthly</h3>
+            <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Mensuel</h3>
             <div className="flex flex-wrap gap-2">
               {MONTHLY_RETENTION_PRESETS.map((months) => {
                 const active = backupRetention.monthlyMonths === months;
-                const label = months === 1 ? "1 month" : `${months} months`;
+                const label = months === 1 ? "1 mois" : `${months} mois`;
                 return (
                   <button
                     key={months}
@@ -276,10 +270,9 @@ export function InstanceGeneralSettings() {
       <section className="rounded-xl border border-border bg-card p-5">
         <div className="space-y-4">
           <div className="space-y-1.5">
-            <h2 className="text-sm font-semibold">AI feedback sharing</h2>
+            <h2 className="text-sm font-semibold">Partage des retours IA</h2>
             <p className="max-w-2xl text-sm text-muted-foreground">
-              Control whether thumbs up and thumbs down votes can send the voted AI output to
-              Paperclip Labs. Votes are always saved locally.
+              Contrôlez si les votes pouce en haut et pouce en bas peuvent envoyer la sortie IA votée à Kovv-ia Labs. Les votes sont toujours enregistrés localement.
             </p>
             {FEEDBACK_TERMS_URL ? (
               <a
@@ -288,27 +281,26 @@ export function InstanceGeneralSettings() {
                 rel="noreferrer"
                 className="inline-flex text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
               >
-                Read our terms of service
+                Lire nos conditions d'utilisation
               </a>
             ) : null}
           </div>
           {feedbackDataSharingPreference === "prompt" ? (
             <div className="rounded-lg border border-border/70 bg-accent/20 px-3 py-2 text-sm text-muted-foreground">
-              No default is saved yet. The next thumbs up or thumbs down choice will ask once and
-              then save the answer here.
+              Aucune préférence enregistrée. Le prochain vote pouce en haut ou pouce en bas posera la question une fois, puis sauvegardera la réponse ici.
             </div>
           ) : null}
           <div className="flex flex-wrap gap-2">
             {[
               {
                 value: "allowed",
-                label: "Always allow",
-                description: "Share voted AI outputs automatically.",
+                label: "Toujours autoriser",
+                description: "Partager automatiquement les sorties IA votées.",
               },
               {
                 value: "not_allowed",
-                label: "Don't allow",
-                description: "Keep voted AI outputs local only.",
+                label: "Ne pas autoriser",
+                description: "Conserver les sorties IA votées uniquement en local.",
               },
             ].map((option) => {
               const active = feedbackDataSharingPreference === option.value;
@@ -340,11 +332,10 @@ export function InstanceGeneralSettings() {
             })}
           </div>
           <p className="text-xs text-muted-foreground">
-            To retest the first-use prompt in local dev, remove the{" "}
-            <code>feedbackDataSharingPreference</code> key from the{" "}
-            <code>instance_settings.general</code> JSON row for this instance, or set it back to{" "}
-            <code>"prompt"</code>. Unset and <code>"prompt"</code> both mean no default has been
-            chosen yet.
+            Pour retester l'invite de première utilisation en développement local, supprimez la clé{" "}
+            <code>feedbackDataSharingPreference</code> de la ligne JSON{" "}
+            <code>instance_settings.general</code> pour cette instance, ou remettez-la à{" "}
+            <code>"prompt"</code>. Valeur absente et <code>"prompt"</code> signifient toutes deux qu'aucune préférence n'a encore été définie.
           </p>
         </div>
       </section>
@@ -352,9 +343,9 @@ export function InstanceGeneralSettings() {
       <section className="rounded-xl border border-border bg-card p-5">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1.5">
-            <h2 className="text-sm font-semibold">Sign out</h2>
+            <h2 className="text-sm font-semibold">Déconnexion</h2>
             <p className="max-w-2xl text-sm text-muted-foreground">
-              Sign out of this Paperclip instance. You will be redirected to the login page.
+              Déconnectez-vous de cette instance Kovv-ia. Vous serez redirigé vers la page de connexion.
             </p>
           </div>
           <Button
@@ -364,7 +355,7 @@ export function InstanceGeneralSettings() {
             onClick={() => signOutMutation.mutate()}
           >
             <LogOut className="size-4" />
-            {signOutMutation.isPending ? "Signing out..." : "Sign out"}
+            {signOutMutation.isPending ? "Déconnexion..." : "Se déconnecter"}
           </Button>
         </div>
       </section>

@@ -45,9 +45,9 @@ import {
 import type { Agent } from "@paperclipai/shared";
 
 const AGENT_SORT_CHOICES: SidebarSectionRadioChoice[] = [
-  { value: "top", label: "Top" },
-  { value: "alphabetical", label: "Alphabetical" },
-  { value: "recent", label: "Recent" },
+  { value: "top", label: "Favoris" },
+  { value: "alphabetical", label: "Alphabétique" },
+  { value: "recent", label: "Récent" },
 ];
 
 function agentTimestamp(agent: Agent, field: "lastHeartbeatAt" | "updatedAt" | "createdAt"): number {
@@ -108,12 +108,12 @@ function SidebarAgentItem({
   const isActive = activeAgentId === routeRef;
   const isPaused = agent.status === "paused";
   const isBudgetPaused = isPaused && agent.pauseReason === "budget";
-  const pauseResumeLabel = isPaused ? "Resume agent" : "Pause agent";
+  const pauseResumeLabel = isPaused ? "Reprendre l'agent" : "Mettre l'agent en pause";
   const pauseResumeDisabled = disabled || agent.status === "pending_approval" || isBudgetPaused;
   const pauseResumeDisabledLabel = disabled
-    ? "Updating..."
+    ? "Mise à jour..."
     : isBudgetPaused
-      ? "Budget paused"
+      ? "Pause budgétaire"
       : pauseResumeLabel;
 
   return (
@@ -136,7 +136,7 @@ function SidebarAgentItem({
         {(agent.pauseReason === "budget" || runCount > 0) && (
           <span className="ml-auto flex items-center gap-1.5 shrink-0">
             {agent.pauseReason === "budget" ? (
-              <BudgetSidebarMarker title="Agent paused by budget" />
+              <BudgetSidebarMarker title="Agent mis en pause par le budget" />
             ) : null}
             {runCount > 0 ? (
               <span className="relative flex h-2 w-2">
@@ -164,7 +164,7 @@ function SidebarAgentItem({
                 ? "opacity-100"
                 : "pointer-events-none opacity-0 group-hover/agent:pointer-events-auto group-hover/agent:opacity-100 group-focus-within/agent:pointer-events-auto group-focus-within/agent:opacity-100",
             )}
-            aria-label={`Open actions for ${agent.name}`}
+            aria-label={`Ouvrir les actions pour ${agent.name}`}
           >
             <MoreHorizontal className="h-3.5 w-3.5" />
           </Button>
@@ -178,7 +178,7 @@ function SidebarAgentItem({
               }}
             >
               <Pencil className="size-4" />
-              <span>Edit agent</span>
+              <span>Modifier l'agent</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
@@ -188,7 +188,7 @@ function SidebarAgentItem({
               onPauseResume(agent, isPaused ? "resume" : "pause");
             }}
             disabled={pauseResumeDisabled}
-            title={isBudgetPaused ? "Agent was paused by budget limits" : undefined}
+            title={isBudgetPaused ? "L'agent a été mis en pause en raison des limites budgétaires" : undefined}
           >
             {isPaused ? <PlayCircle className="size-4" /> : <PauseCircle className="size-4" />}
             <span>{pauseResumeDisabledLabel}</span>
@@ -202,7 +202,7 @@ function SidebarAgentItem({
             disabled={leaving}
           >
             {leaving ? <Loader2 className="size-4 motion-safe:animate-spin" /> : <LogOut className="size-4" />}
-            <span>{leaving ? "Leaving..." : "Leave agent"}</span>
+            <span>{leaving ? "Départ en cours..." : "Quitter l'agent"}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -347,14 +347,14 @@ export function SidebarAgents() {
         queryClient.invalidateQueries({ queryKey: queryKeys.agents.detail(agentRouteRef(agent)) }),
       ]);
       pushToast({
-        title: action === "pause" ? "Agent paused" : "Agent resumed",
+        title: action === "pause" ? "Agent mis en pause" : "Agent repris",
         body: agent.name,
         tone: "success",
       });
     },
     onError: (error, { agent, action }) => {
       pushToast({
-        title: action === "pause" ? "Could not pause agent" : "Could not resume agent",
+        title: action === "pause" ? "Impossible de mettre l'agent en pause" : "Impossible de reprendre l'agent",
         body: error instanceof Error ? error.message : agent.name,
         tone: "error",
       });
@@ -390,17 +390,17 @@ export function SidebarAgents() {
       label="Agents"
       collapsible={{ open, onOpenChange: setOpen }}
       headerAction={{
-        ariaLabel: "New agent",
+        ariaLabel: "Nouvel agent",
         icon: Plus,
         onClick: openNewAgent,
       }}
       menu={{
-        ariaLabel: "Agents section actions",
+        ariaLabel: "Actions de la section Agents",
         actions: [
-          { type: "item", label: "Browse agents", icon: Users, href: "/agents/all" },
+          { type: "item", label: "Parcourir les agents", icon: Users, href: "/agents/all" },
           { type: "separator" },
         ],
-        radioLabel: "Agent sort",
+        radioLabel: "Tri des agents",
         radioChoices: AGENT_SORT_CHOICES,
         radioValue: sortMode,
         onRadioValueChange: persistSortMode,

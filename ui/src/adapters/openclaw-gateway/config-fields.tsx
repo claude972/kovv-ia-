@@ -134,7 +134,7 @@ export function OpenClawGatewayConfigFields({
 
       {!isCreate && (
         <>
-          <Field label="Paperclip API URL override">
+          <Field label="Remplacement de l'URL API Kovv-ia">
             <DraftInput
               value={
                 eff(
@@ -236,8 +236,8 @@ export function OpenClawGatewayConfigFields({
 
           <Field label="Device auth">
             <div className="text-xs text-muted-foreground leading-relaxed">
-              Always enabled for gateway agents. Paperclip persists a device key during onboarding so pairing approvals
-              remain stable across runs.
+              Toujours activé pour les agents passerelle. Kovv-ia persiste une clé d'appareil lors de l'intégration afin que les approbations de jumelage
+              restent stables d'une exécution à l'autre.
             </div>
           </Field>
         </>

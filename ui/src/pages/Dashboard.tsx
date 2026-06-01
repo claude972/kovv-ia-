@@ -50,7 +50,7 @@ export function Dashboard() {
   });
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Dashboard" }]);
+    setBreadcrumbs([{ label: "Tableau de bord" }]);
   }, [setBreadcrumbs]);
 
   const { data, isLoading, error } = useQuery({
@@ -176,14 +176,14 @@ export function Dashboard() {
       return (
         <EmptyState
           icon={LayoutDashboard}
-          message="Welcome to Paperclip. Set up your first company and agent to get started."
-          action="Get Started"
+          message="Bienvenue sur Kovv-ia. Configurez votre première entreprise et votre premier agent pour commencer."
+          action="Commencer"
           onAction={openOnboarding}
         />
       );
     }
     return (
-      <EmptyState icon={LayoutDashboard} message="Create or select a company to view the dashboard." />
+      <EmptyState icon={LayoutDashboard} message="Créez ou sélectionnez une entreprise pour afficher le tableau de bord." />
     );
   }
 
@@ -202,14 +202,14 @@ export function Dashboard() {
           <div className="flex items-center gap-2.5">
             <Bot className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0" />
             <p className="text-sm text-amber-900 dark:text-amber-100">
-              You have no agents.
+              Vous n'avez aucun agent.
             </p>
           </div>
           <button
             onClick={() => openOnboarding({ initialStep: 2, companyId: selectedCompanyId! })}
             className="text-sm font-medium text-amber-700 hover:text-amber-900 dark:text-amber-300 dark:hover:text-amber-100 underline underline-offset-2 shrink-0"
           >
-            Create one here
+            En créer un ici
           </button>
         </div>
       )}
@@ -224,15 +224,15 @@ export function Dashboard() {
                 <PauseCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-300" />
                 <div>
                   <p className="text-sm font-medium text-red-50">
-                    {data.budgets.activeIncidents} active budget incident{data.budgets.activeIncidents === 1 ? "" : "s"}
+                    {data.budgets.activeIncidents} incident{data.budgets.activeIncidents === 1 ? "" : "s"} budgétaire{data.budgets.activeIncidents === 1 ? "" : "s"} actif{data.budgets.activeIncidents === 1 ? "" : "s"}
                   </p>
                   <p className="text-xs text-red-100/70">
-                    {data.budgets.pausedAgents} agents paused · {data.budgets.pausedProjects} projects paused · {data.budgets.pendingApprovals} pending budget approvals
+                    {data.budgets.pausedAgents} agents en pause · {data.budgets.pausedProjects} projets en pause · {data.budgets.pendingApprovals} approbations budgétaires en attente
                   </p>
                 </div>
               </div>
               <Link to="/costs" className="text-sm underline underline-offset-2 text-red-100">
-                Open budgets
+                Voir les budgets
               </Link>
             </div>
           ) : null}
@@ -241,67 +241,67 @@ export function Dashboard() {
             <MetricCard
               icon={Bot}
               value={data.agents.active + data.agents.running + data.agents.paused + data.agents.error}
-              label="Agents Enabled"
+              label="Agents actifs"
               to="/agents"
               description={
                 <span>
-                  {data.agents.running} running{", "}
-                  {data.agents.paused} paused{", "}
-                  {data.agents.error} errors
+                  {data.agents.running} en cours{", "}
+                  {data.agents.paused} en pause{", "}
+                  {data.agents.error} erreurs
                 </span>
               }
             />
             <MetricCard
               icon={CircleDot}
               value={data.tasks.inProgress}
-              label="Tasks In Progress"
+              label="Tâches en cours"
               to="/issues"
               description={
                 <span>
-                  {data.tasks.open} open{", "}
-                  {data.tasks.blocked} blocked
+                  {data.tasks.open} ouvertes{", "}
+                  {data.tasks.blocked} bloquées
                 </span>
               }
             />
             <MetricCard
               icon={DollarSign}
               value={formatCents(data.costs.monthSpendCents)}
-              label="Month Spend"
+              label="Dépenses du mois"
               to="/costs"
               description={
                 <span>
                   {data.costs.monthBudgetCents > 0
-                    ? `${data.costs.monthUtilizationPercent}% of ${formatCents(data.costs.monthBudgetCents)} budget`
-                    : "Unlimited budget"}
+                    ? `${data.costs.monthUtilizationPercent}% du budget ${formatCents(data.costs.monthBudgetCents)}`
+                    : "Budget illimité"}
                 </span>
               }
             />
             <MetricCard
               icon={ShieldCheck}
               value={data.pendingApprovals + data.budgets.pendingApprovals}
-              label="Pending Approvals"
+              label="Approbations en attente"
               to="/approvals"
               description={
                 <span>
                   {data.budgets.pendingApprovals > 0
-                    ? `${data.budgets.pendingApprovals} budget overrides awaiting board review`
-                    : "Awaiting board review"}
+                    ? `${data.budgets.pendingApprovals} dérogations budgétaires en attente de validation`
+                    : "En attente de validation"}
                 </span>
               }
             />
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <ChartCard title="Run Activity" subtitle="Last 14 days">
+            <ChartCard title="Activité des runs" subtitle="14 derniers jours">
               <RunActivityChart activity={data.runActivity} />
             </ChartCard>
-            <ChartCard title="Issues by Priority" subtitle="Last 14 days">
+            <ChartCard title="Tâches par priorité" subtitle="14 derniers jours">
               <PriorityChart issues={issues ?? []} />
             </ChartCard>
-            <ChartCard title="Issues by Status" subtitle="Last 14 days">
+            <ChartCard title="Tâches par statut" subtitle="14 derniers jours">
               <IssueStatusChart issues={issues ?? []} />
             </ChartCard>
-            <ChartCard title="Success Rate" subtitle="Last 14 days">
+            <ChartCard title="Taux de succès" subtitle="14 derniers jours">
               <SuccessRateChart activity={data.runActivity} />
             </ChartCard>
           </div>
@@ -318,7 +318,7 @@ export function Dashboard() {
             {recentActivity.length > 0 && (
               <div className="min-w-0">
                 <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
-                  Recent Activity
+                  Activité récente
                 </h3>
                 <div className="border border-border divide-y divide-border overflow-hidden">
                   {recentActivity.map((event) => (
@@ -339,11 +339,11 @@ export function Dashboard() {
             {/* Recent Tasks */}
             <div className="min-w-0">
               <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
-                Recent Tasks
+                Tâches récentes
               </h3>
               {recentIssues.length === 0 ? (
                 <div className="border border-border p-4">
-                  <p className="text-sm text-muted-foreground">No tasks yet.</p>
+                  <p className="text-sm text-muted-foreground">Aucune tâche pour l'instant.</p>
                 </div>
               ) : (
                 <div className="border border-border divide-y divide-border overflow-hidden">

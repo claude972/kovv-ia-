@@ -13,27 +13,27 @@ import { queryKeys } from "@/lib/queryKeys";
 const inviteRoleOptions = [
   {
     value: "viewer",
-    label: "Viewer",
-    description: "Can view company work and follow along.",
-    gets: "View-only company membership.",
+    label: "Observateur",
+    description: "Peut consulter le travail de l'entreprise et suivre l'avancement.",
+    gets: "Adhésion en lecture seule.",
   },
   {
     value: "operator",
-    label: "Operator",
-    description: "Recommended for people who need to help run work without managing access.",
-    gets: "Can assign tasks.",
+    label: "Opérateur",
+    description: "Recommandé pour les personnes devant contribuer sans gérer les accès.",
+    gets: "Peut assigner des tâches.",
   },
   {
     value: "admin",
-    label: "Admin",
-    description: "Recommended for operators who need to invite people, create agents, and approve joins.",
-    gets: "Can create agents, invite users, assign tasks, and approve join requests.",
+    label: "Administrateur",
+    description: "Recommandé pour les opérateurs devant inviter des membres, créer des agents et approuver des adhésions.",
+    gets: "Peut créer des agents, inviter des utilisateurs, assigner des tâches et approuver les demandes d'adhésion.",
   },
   {
     value: "owner",
-    label: "Owner",
-    description: "Full company access, including membership management.",
-    gets: "Everything in Admin, plus managing members.",
+    label: "Propriétaire",
+    description: "Accès complet à l'entreprise, y compris la gestion des membres.",
+    gets: "Tout ce qu'un administrateur peut faire, plus la gestion des membres.",
   },
 ] as const;
 
@@ -105,7 +105,7 @@ export function CompanyInvites() {
 
     afterFallback?.();
     pushToast({
-      title: "Clipboard unavailable",
+      title: "Presse-papiers indisponible",
       body: unavailableBody,
       tone: "warn",
     });
@@ -113,14 +113,14 @@ export function CompanyInvites() {
   }
 
   async function copyInviteUrl(url: string) {
-    return copyText(url, "The invite URL is selected. Copy it manually from the field.", selectLatestInviteUrl);
+    return copyText(url, "L'URL d'invitation est sélectionnée. Copiez-la manuellement depuis le champ.", selectLatestInviteUrl);
   }
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: selectedCompany?.name ?? "Company", href: "/dashboard" },
-      { label: "Settings", href: "/company/settings" },
-      { label: "Invites" },
+      { label: selectedCompany?.name ?? "Entreprise", href: "/dashboard" },
+      { label: "Paramètres", href: "/company/settings" },
+      { label: "Invitations" },
     ]);
   }, [selectedCompany?.name, setBreadcrumbs]);
 
@@ -154,19 +154,19 @@ export function CompanyInvites() {
     onSuccess: async (invite) => {
       setLatestInviteUrl(invite.inviteUrl);
       setLatestInviteCopied(false);
-      const copied = await copyText(invite.inviteUrl, "Copy the invite URL manually from the field below.");
+      const copied = await copyText(invite.inviteUrl, "Copiez manuellement l'URL d'invitation depuis le champ ci-dessous.");
 
       await queryClient.invalidateQueries({ queryKey: inviteHistoryQueryKey });
       pushToast({
-        title: "Invite created",
-        body: copied ? "Invite ready below and copied to clipboard." : "Invite ready below.",
+        title: "Invitation créée",
+        body: copied ? "Invitation disponible ci-dessous et copiée dans le presse-papiers." : "Invitation disponible ci-dessous.",
         tone: "success",
       });
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to create invite",
-        body: error instanceof Error ? error.message : "Unknown error",
+        title: "Échec de la création de l'invitation",
+        body: error instanceof Error ? error.message : "Erreur inconnue",
         tone: "error",
       });
     },
@@ -176,32 +176,32 @@ export function CompanyInvites() {
     mutationFn: (inviteId: string) => accessApi.revokeInvite(inviteId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: inviteHistoryQueryKey });
-      pushToast({ title: "Invite revoked", tone: "success" });
+      pushToast({ title: "Invitation révoquée", tone: "success" });
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to revoke invite",
-        body: error instanceof Error ? error.message : "Unknown error",
+        title: "Échec de la révocation de l'invitation",
+        body: error instanceof Error ? error.message : "Erreur inconnue",
         tone: "error",
       });
     },
   });
 
   if (!selectedCompanyId) {
-    return <div className="text-sm text-muted-foreground">Select a company to manage invites.</div>;
+    return <div className="text-sm text-muted-foreground">Sélectionnez une entreprise pour gérer les invitations.</div>;
   }
 
   if (invitesQuery.isLoading) {
-    return <div className="text-sm text-muted-foreground">Loading invites…</div>;
+    return <div className="text-sm text-muted-foreground">Chargement des invitations…</div>;
   }
 
   if (invitesQuery.error) {
     const message =
       invitesQuery.error instanceof ApiError && invitesQuery.error.status === 403
-        ? "You do not have permission to manage company invites."
+        ? "Vous n'avez pas la permission de gérer les invitations de cette entreprise."
         : invitesQuery.error instanceof Error
           ? invitesQuery.error.message
-          : "Failed to load invites.";
+          : "Impossible de charger les invitations.";
     return <div className="text-sm text-destructive">{message}</div>;
   }
 
@@ -210,23 +210,23 @@ export function CompanyInvites() {
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           <MailPlus className="h-5 w-5 text-muted-foreground" />
-          <h1 className="text-lg font-semibold">Company Invites</h1>
+          <h1 className="text-lg font-semibold">Invitations de l'entreprise</h1>
         </div>
         <p className="max-w-3xl text-sm text-muted-foreground">
-          Invite people to request access to this company. New invite links are copied to your clipboard when they are generated.
+          Invitez des personnes à demander l'accès à cette entreprise. Les nouveaux liens d'invitation sont copiés dans votre presse-papiers lors de leur génération.
         </p>
       </div>
 
       <section className="space-y-4 rounded-xl border border-border p-5">
         <div className="space-y-1">
-          <h2 className="text-sm font-semibold">Invite a person</h2>
+          <h2 className="text-sm font-semibold">Inviter une personne</h2>
           <p className="text-sm text-muted-foreground">
-            Generate a human invite link and choose the default access it should request.
+            Générez un lien d'invitation humain et choisissez le niveau d'accès par défaut demandé.
           </p>
         </div>
 
         <fieldset className="space-y-3">
-          <legend className="text-sm font-medium">Choose a role</legend>
+          <legend className="text-sm font-medium">Choisissez un rôle</legend>
           <div className="rounded-xl border border-border">
             {inviteRoleOptions.map((option, index) => {
               const checked = humanRole === option.value;
@@ -248,7 +248,7 @@ export function CompanyInvites() {
                       <span className="text-sm font-medium">{option.label}</span>
                       {option.value === "operator" ? (
                         <span className="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground">
-                          Default
+                          Par défaut
                         </span>
                       ) : null}
                     </span>
@@ -262,34 +262,34 @@ export function CompanyInvites() {
         </fieldset>
 
         <div className="rounded-lg border border-border px-4 py-3 text-sm text-muted-foreground">
-          Each invite link is single-use. Human invitees get the selected role immediately after sign-in; agent invites still create a join request for approval.
+          Chaque lien d'invitation est à usage unique. Les invités humains obtiennent le rôle sélectionné immédiatement après la connexion ; les invitations pour agents créent une demande d'adhésion soumise à approbation.
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
           <Button onClick={() => createInviteMutation.mutate()} disabled={createInviteMutation.isPending}>
-            {createInviteMutation.isPending ? "Creating…" : "Create invite"}
+            {createInviteMutation.isPending ? "Création…" : "Créer une invitation"}
           </Button>
-          <span className="text-sm text-muted-foreground">Invite history below keeps the audit trail.</span>
+          <span className="text-sm text-muted-foreground">L'historique des invitations ci-dessous conserve la trace d'audit.</span>
         </div>
 
         {latestInviteUrl ? (
           <div className="space-y-3 rounded-lg border border-border px-4 py-4">
             <div className="space-y-1">
               <div className="flex items-center justify-between gap-3">
-                <div className="text-sm font-medium">Latest invite link</div>
+                <div className="text-sm font-medium">Dernier lien d'invitation</div>
                 {latestInviteCopied ? (
                   <div className="inline-flex items-center gap-1 text-xs font-medium text-foreground">
                     <Check className="h-3.5 w-3.5" />
-                    Copied
+                    Copié
                   </div>
                 ) : null}
               </div>
               <div className="text-sm text-muted-foreground">
-                This URL includes the current Paperclip domain returned by the server.
+                Cette URL inclut le domaine Kovv-ia actuel renvoyé par le serveur.
               </div>
             </div>
             <label className="block space-y-1">
-              <span className="sr-only">Latest invite URL</span>
+              <span className="sr-only">Dernière URL d'invitation</span>
               <input
                 ref={latestInviteInputRef}
                 readOnly
@@ -297,7 +297,7 @@ export function CompanyInvites() {
                 onFocus={(event) => event.currentTarget.select()}
                 onClick={(event) => event.currentTarget.select()}
                 className="w-full rounded-md border border-border bg-muted/60 px-3 py-2 text-sm text-foreground outline-none transition-colors selection:bg-primary selection:text-primary-foreground focus:border-ring"
-                aria-label="Latest invite URL"
+                aria-label="Dernière URL d'invitation"
               />
             </label>
             <div className="flex flex-wrap gap-2">
@@ -311,12 +311,12 @@ export function CompanyInvites() {
                 }}
               >
                 <Copy className="h-4 w-4" />
-                Copy link
+                Copier le lien
               </Button>
               <Button size="sm" variant="outline" asChild>
                 <a href={latestInviteUrl} target="_blank" rel="noreferrer">
                   <ExternalLink className="h-4 w-4" />
-                  Open invite
+                  Ouvrir l'invitation
                 </a>
               </Button>
             </div>
@@ -327,19 +327,19 @@ export function CompanyInvites() {
       <section className="rounded-xl border border-border">
         <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-4">
           <div className="space-y-1">
-            <h2 className="text-sm font-semibold">Invite history</h2>
+            <h2 className="text-sm font-semibold">Historique des invitations</h2>
             <p className="text-sm text-muted-foreground">
-              Review invite status, audience, inviter, and any linked join request.
+              Consultez le statut, le public cible, l'expéditeur et toute demande d'adhésion associée.
             </p>
           </div>
           <Link to="/inbox/requests" className="text-sm underline underline-offset-4">
-            Open join request queue
+            Voir la file des demandes d'adhésion
           </Link>
         </div>
 
         {inviteHistory.length === 0 ? (
           <div className="border-t border-border px-5 py-8 text-sm text-muted-foreground">
-            No invites have been created for this company yet.
+            Aucune invitation n'a été créée pour cette entreprise pour le moment.
           </div>
         ) : (
           <div className="border-t border-border">
@@ -347,11 +347,11 @@ export function CompanyInvites() {
               <table className="min-w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="px-5 py-3 font-medium text-muted-foreground">State</th>
-                    <th className="px-5 py-3 font-medium text-muted-foreground">For</th>
-                    <th className="px-5 py-3 font-medium text-muted-foreground">Invited by</th>
-                    <th className="px-5 py-3 font-medium text-muted-foreground">Created</th>
-                    <th className="px-5 py-3 font-medium text-muted-foreground">Join request</th>
+                    <th className="px-5 py-3 font-medium text-muted-foreground">Statut</th>
+                    <th className="px-5 py-3 font-medium text-muted-foreground">Pour</th>
+                    <th className="px-5 py-3 font-medium text-muted-foreground">Invité par</th>
+                    <th className="px-5 py-3 font-medium text-muted-foreground">Créée le</th>
+                    <th className="px-5 py-3 font-medium text-muted-foreground">Demande d'adhésion</th>
                     <th className="px-5 py-3 text-right font-medium text-muted-foreground">Action</th>
                   </tr>
                 </thead>
@@ -365,7 +365,7 @@ export function CompanyInvites() {
                       </td>
                       <td className="px-5 py-3 align-top">{formatInviteAudience(invite)}</td>
                       <td className="px-5 py-3 align-top">
-                        <div>{invite.invitedByUser?.name || invite.invitedByUser?.email || "Unknown inviter"}</div>
+                        <div>{invite.invitedByUser?.name || invite.invitedByUser?.email || "Expéditeur inconnu"}</div>
                         {invite.invitedByUser?.email && invite.invitedByUser.name ? (
                           <div className="text-xs text-muted-foreground">{invite.invitedByUser.email}</div>
                         ) : null}
@@ -376,7 +376,7 @@ export function CompanyInvites() {
                       <td className="px-5 py-3 align-top">
                         {invite.relatedJoinRequestId ? (
                           <Link to="/inbox/requests" className="underline underline-offset-4">
-                            Review request
+                            Examiner la demande
                           </Link>
                         ) : (
                           <span className="text-muted-foreground">—</span>
@@ -390,7 +390,7 @@ export function CompanyInvites() {
                             onClick={() => revokeMutation.mutate(invite.id)}
                             disabled={revokeMutation.isPending}
                           >
-                            Revoke
+                            Révoquer
                           </Button>
                         ) : (
                           <span className="text-xs text-muted-foreground">Inactive</span>
@@ -409,7 +409,7 @@ export function CompanyInvites() {
                   onClick={() => invitesQuery.fetchNextPage()}
                   disabled={invitesQuery.isFetchingNextPage}
                 >
-                  {invitesQuery.isFetchingNextPage ? "Loading more…" : "View more"}
+                  {invitesQuery.isFetchingNextPage ? "Chargement…" : "Voir plus"}
                 </Button>
               </div>
             ) : null}
@@ -426,6 +426,6 @@ function formatInviteState(state: "active" | "accepted" | "expired" | "revoked")
 
 function formatInviteAudience(invite: Awaited<ReturnType<typeof accessApi.listInvites>>["invites"][number]) {
   if (invite.allowedJoinTypes === "agent") return "Agent";
-  if (invite.allowedJoinTypes === "both") return invite.humanRole ? `Human or agent · ${invite.humanRole}` : "Human or agent";
-  return invite.humanRole ?? "Human";
+  if (invite.allowedJoinTypes === "both") return invite.humanRole ? `Humain ou agent · ${invite.humanRole}` : "Humain ou agent";
+  return invite.humanRole ?? "Humain";
 }

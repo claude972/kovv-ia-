@@ -423,7 +423,7 @@ export function WorkspaceRuntimeControls({
 
       <CommandSection
         title="Services"
-        description="Long-running commands that Paperclip can supervise for this workspace."
+        description="Commandes de longue durée que Kovv-ia peut superviser pour cet espace de travail."
         items={resolvedSections.services}
         emptyMessage={resolvedServiceEmptyMessage}
         disabledHint={visibleDisabledHint}

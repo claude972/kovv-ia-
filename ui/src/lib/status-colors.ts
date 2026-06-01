@@ -83,6 +83,57 @@ export const statusBadge: Record<string, string> = {
 export const statusBadgeDefault = "bg-muted text-muted-foreground";
 
 // ---------------------------------------------------------------------------
+// French display labels — used by StatusBadge for all entity types.
+// Keys are the canonical status codes (unchanged in logic); values are the
+// user-facing French labels. Fall back to the humanized code when unmapped.
+// ---------------------------------------------------------------------------
+
+export const statusLabel: Record<string, string> = {
+  // Agent statuses
+  active: "Actif",
+  running: "En cours",
+  scheduled_retry: "Nouvelle tentative planifiée",
+  paused: "En pause",
+  idle: "Inactif",
+  archived: "Archivé",
+
+  // Goal statuses
+  planned: "Planifié",
+  achieved: "Atteint",
+  completed: "Terminé",
+
+  // Run statuses
+  failed: "Échoué",
+  timed_out: "Expiré",
+  succeeded: "Réussi",
+  ok: "OK",
+  warning: "Avertissement",
+  error: "Erreur",
+  info: "Info",
+  terminated: "Interrompu",
+  pending: "En attente",
+
+  // Approval statuses
+  pending_approval: "En attente d'approbation",
+  revision_requested: "Révision demandée",
+  approved: "Approuvé",
+  rejected: "Rejeté",
+
+  // Issue statuses
+  backlog: "Backlog",
+  todo: "À faire",
+  in_progress: "En cours",
+  in_review: "En revue",
+  blocked: "Bloqué",
+  done: "Terminé",
+  cancelled: "Annulé",
+};
+
+export function formatStatusLabel(status: string): string {
+  return statusLabel[status] ?? status.replace(/_/g, " ");
+}
+
+// ---------------------------------------------------------------------------
 // Agent status dot — solid background for small indicator dots
 // ---------------------------------------------------------------------------
 

@@ -62,8 +62,8 @@ export function Sidebar() {
           variant="ghost"
           size="icon-sm"
           className="text-muted-foreground shrink-0"
-          aria-label="Open search"
-          title="Open search"
+          aria-label="Ouvrir la recherche"
+          title="Ouvrir la recherche"
         >
           <NavLink to="/search">
             <Search className="h-4 w-4" />
@@ -80,12 +80,12 @@ export function Sidebar() {
             className="flex items-center gap-2.5 px-3 py-2 pointer-coarse:py-1.5 text-[13px] font-medium text-muted-foreground hover:bg-accent/50 hover:text-foreground transition-colors"
           >
             <SquarePen className="h-4 w-4 shrink-0" />
-            <span className="truncate">New Issue</span>
+            <span className="truncate">Nouveau ticket</span>
           </button>
-          <SidebarNavItem to="/dashboard" label="Dashboard" icon={LayoutDashboard} liveCount={liveRunCount} />
+          <SidebarNavItem to="/dashboard" label="Tableau de bord" icon={LayoutDashboard} liveCount={liveRunCount} />
           <SidebarNavItem
             to="/inbox"
-            label="Inbox"
+            label="Boîte de réception"
             icon={Inbox}
             badge={inboxBadge.inbox}
             badgeTone={inboxBadge.failedRuns > 0 ? "danger" : "default"}
@@ -93,12 +93,12 @@ export function Sidebar() {
           />
         </div>
 
-        <SidebarSection label="Work">
-          <SidebarNavItem to="/issues" label="Issues" icon={CircleDot} />
+        <SidebarSection label="Travail">
+          <SidebarNavItem to="/issues" label="Tickets" icon={CircleDot} />
           <SidebarNavItem to="/routines" label="Routines" icon={Repeat} />
-          <SidebarNavItem to="/goals" label="Goals" icon={Target} />
+          <SidebarNavItem to="/goals" label="Objectifs" icon={Target} />
           {showWorkspacesLink ? (
-            <SidebarNavItem to="/workspaces" label="Workspaces" icon={GitBranch} />
+            <SidebarNavItem to="/workspaces" label="Espaces de travail" icon={GitBranch} />
           ) : null}
           <PluginSlotOutlet
             slotTypes={["sidebar"]}
@@ -119,12 +119,12 @@ export function Sidebar() {
 
         <SidebarAgents />
 
-        <SidebarSection label="Company">
-          <SidebarNavItem to="/org" label="Org" icon={Network} />
-          <SidebarNavItem to="/skills" label="Skills" icon={Boxes} />
-          <SidebarNavItem to="/costs" label="Costs" icon={DollarSign} />
-          <SidebarNavItem to="/activity" label="Activity" icon={History} />
-          <SidebarNavItem to="/company/settings" label="Settings" icon={Settings} />
+        <SidebarSection label="Entreprise">
+          <SidebarNavItem to="/org" label="Organisation" icon={Network} />
+          <SidebarNavItem to="/skills" label="Compétences" icon={Boxes} />
+          <SidebarNavItem to="/costs" label="Coûts" icon={DollarSign} />
+          <SidebarNavItem to="/activity" label="Activité" icon={History} />
+          <SidebarNavItem to="/company/settings" label="Paramètres" icon={Settings} />
         </SidebarSection>
 
         <PluginSlotOutlet

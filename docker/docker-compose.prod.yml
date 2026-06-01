@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+  paperclip:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: paperclip-prod
+    restart: unless-stopped
+    expose:
+      - "3100"
+    environment:
+      NODE_ENV: "production"
+      HOST: "0.0.0.0"
+      PORT: "3100"
+      SERVE_UI: "true"
+      PAPERCLIP_HOME: "/paperclip"
+      PAPERCLIP_CONFIG: "/paperclip/instances/default/config.json"
+      PAPERCLIP_DEPLOYMENT_MODE: "authenticated"
+      PAPERCLIP_DEPLOYMENT_EXPOSURE: "public"
+      PAPERCLIP_PUBLIC_URL: "${PAPERCLIP_PUBLIC_URL:?PAPERCLIP_PUBLIC_URL must be set}"
+      BETTER_AUTH_SECRET: "${BETTER_AUTH_SECRET:?BETTER_AUTH_SECRET must be set}"
+      CLAUDE_CODE_OAUTH_TOKEN: "${CLAUDE_CODE_OAUTH_TOKEN:-}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+    volumes:
+      - paperclip-data:/paperclip
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3100/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy-prod
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      DOMAIN: "${DOMAIN:?DOMAIN must be set}"
+    depends_on:
+      paperclip:
+        condition: service_healthy
+
+volumes:
+  paperclip-data:
+  caddy_data:
+  caddy_config:

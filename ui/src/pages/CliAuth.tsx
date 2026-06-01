@@ -76,7 +76,7 @@ export function CliAuthPage() {
         <div className="rounded-lg border border-border bg-card p-6">
           <h1 className="text-xl font-semibold">CLI access approved</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            The Paperclip CLI can now finish authentication on the requesting machine.
+            Le CLI Kovv-ia peut maintenant finaliser l'authentification sur la machine demandante.
           </p>
           <p className="mt-4 text-sm text-muted-foreground">
             Command: <span className="font-mono text-foreground">{challenge.command}</span>
@@ -120,9 +120,9 @@ export function CliAuthPage() {
   return (
     <div className="mx-auto max-w-xl py-10">
       <div className="rounded-lg border border-border bg-card p-6">
-        <h1 className="text-xl font-semibold">Approve Paperclip CLI access</h1>
+        <h1 className="text-xl font-semibold">Approuver l'accès CLI Kovv-ia</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          A local Paperclip CLI process is requesting board access to this instance.
+          Un processus CLI Kovv-ia local demande l'accès au tableau de bord de cette instance.
         </p>
 
         <div className="mt-5 space-y-3 text-sm">

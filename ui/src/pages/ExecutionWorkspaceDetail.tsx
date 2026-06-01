@@ -67,10 +67,10 @@ type OrderedExecutionWorkspaceTabItem = {
 
 const DEFAULT_PLUGIN_DETAIL_TAB_ORDER = 100;
 const EXECUTION_WORKSPACE_BASE_TAB_ITEMS: OrderedExecutionWorkspaceTabItem[] = [
-  { value: "issues", label: "Issues", order: 10 },
+  { value: "issues", label: "Tickets", order: 10 },
   { value: "services", label: "Services", order: 20 },
   { value: "configuration", label: "Configuration", order: 30 },
-  { value: "runtime_logs", label: "Runtime logs", order: 40 },
+  { value: "runtime_logs", label: "Journaux d'exécution", order: 40 },
   { value: "routines", label: "Routines", order: 60 },
 ];
 

@@ -147,15 +147,15 @@ export function CompanySettings() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: selectedCompany?.name ?? "Company", href: "/dashboard" },
-      { label: "Settings" }
+      { label: selectedCompany?.name ?? "Entreprise", href: "/dashboard" },
+      { label: "Paramètres" }
     ]);
   }, [setBreadcrumbs, selectedCompany?.name]);
 
   if (!selectedCompany) {
     return (
       <div className="text-sm text-muted-foreground">
-        No company selected. Select a company from the switcher above.
+        Aucune entreprise sélectionnée. Choisissez une entreprise via le sélecteur ci-dessus.
       </div>
     );
   }
@@ -173,16 +173,16 @@ export function CompanySettings() {
     <div className="max-w-2xl space-y-6">
       <div className="flex items-center gap-2">
         <Settings className="h-5 w-5 text-muted-foreground" />
-        <h1 className="text-lg font-semibold">Company Settings</h1>
+        <h1 className="text-lg font-semibold">Paramètres de l'entreprise</h1>
       </div>
 
       {/* General */}
       <div className="space-y-4">
         <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-          General
+          Général
         </div>
         <div className="space-y-3 rounded-md border border-border px-4 py-4">
-          <Field label="Company name" hint="The display name for your company.">
+          <Field label="Nom de l'entreprise" hint="Le nom affiché pour votre entreprise.">
             <input
               className="w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-sm outline-none"
               type="text"
@@ -192,13 +192,13 @@ export function CompanySettings() {
           </Field>
           <Field
             label="Description"
-            hint="Optional description shown in the company profile."
+            hint="Description facultative affichée dans le profil de l'entreprise."
           >
             <input
               className="w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-sm outline-none"
               type="text"
               value={description}
-              placeholder="Optional company description"
+              placeholder="Description facultative de l'entreprise"
               onChange={(e) => setDescription(e.target.value)}
             />
           </Field>
@@ -208,7 +208,7 @@ export function CompanySettings() {
       {/* Appearance */}
       <div className="space-y-4">
         <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-          Appearance
+          Apparence
         </div>
         <div className="space-y-3 rounded-md border border-border px-4 py-4">
           <div className="flex items-start gap-4">
@@ -223,7 +223,7 @@ export function CompanySettings() {
             <div className="flex-1 space-y-3">
               <Field
                 label="Logo"
-                hint="Upload a PNG, JPEG, WEBP, GIF, or SVG logo image."
+                hint="Importez une image de logo au format PNG, JPEG, WEBP, GIF ou SVG."
               >
                 <div className="space-y-2">
                   <input
@@ -240,7 +240,7 @@ export function CompanySettings() {
                         onClick={handleClearLogo}
                         disabled={clearLogoMutation.isPending}
                       >
-                        {clearLogoMutation.isPending ? "Removing..." : "Remove logo"}
+                        {clearLogoMutation.isPending ? "Suppression..." : "Supprimer le logo"}
                       </Button>
                     </div>
                   )}
@@ -249,7 +249,7 @@ export function CompanySettings() {
                       {logoUploadError ??
                         (logoUploadMutation.error instanceof Error
                           ? logoUploadMutation.error.message
-                          : "Logo upload failed")}
+                          : "Échec du téléchargement du logo")}
                     </span>
                   )}
                   {clearLogoMutation.isError && (
@@ -258,13 +258,13 @@ export function CompanySettings() {
                     </span>
                   )}
                   {logoUploadMutation.isPending && (
-                    <span className="text-xs text-muted-foreground">Uploading logo...</span>
+                    <span className="text-xs text-muted-foreground">Téléchargement du logo...</span>
                   )}
                 </div>
               </Field>
               <Field
-                label="Brand color"
-                hint="Sets the hue for the company icon. Leave empty for auto-generated color."
+                label="Couleur de marque"
+                hint="Définit la teinte de l'icône de l'entreprise. Laissez vide pour une couleur générée automatiquement."
               >
                 <div className="flex items-center gap-2">
                   <input
@@ -282,7 +282,7 @@ export function CompanySettings() {
                         setBrandColor(v);
                       }
                     }}
-                    placeholder="Auto"
+                    placeholder="Automatique"
                     className="w-28 rounded-md border border-border bg-transparent px-2.5 py-1.5 text-sm font-mono outline-none"
                   />
                   {brandColor && (
@@ -292,14 +292,14 @@ export function CompanySettings() {
                       onClick={() => setBrandColor("")}
                       className="text-xs text-muted-foreground"
                     >
-                      Clear
+                      Effacer
                     </Button>
                   )}
                 </div>
               </Field>
               <Field
-                label="Attachment size limit"
-                hint={`Accepted range: 1-${MAX_COMPANY_ATTACHMENT_MAX_MIB} MiB.`}
+                label="Taille maximale des pièces jointes"
+                hint={`Plage acceptée : 1-${MAX_COMPANY_ATTACHMENT_MAX_MIB} MiB.`}
               >
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center gap-2">
@@ -316,7 +316,7 @@ export function CompanySettings() {
                   </div>
                   {!attachmentMaxValid && (
                     <span className="text-xs text-destructive">
-                      Enter a whole number from 1 to {MAX_COMPANY_ATTACHMENT_MAX_MIB}.
+                      Saisissez un nombre entier compris entre 1 et {MAX_COMPANY_ATTACHMENT_MAX_MIB}.
                     </span>
                   )}
                 </div>
@@ -334,16 +334,16 @@ export function CompanySettings() {
             onClick={handleSaveGeneral}
             disabled={generalMutation.isPending || !companyName.trim() || !attachmentMaxValid}
           >
-            {generalMutation.isPending ? "Saving..." : "Save changes"}
+            {generalMutation.isPending ? "Enregistrement..." : "Enregistrer les modifications"}
           </Button>
           {generalMutation.isSuccess && (
-            <span className="text-xs text-muted-foreground">Saved</span>
+            <span className="text-xs text-muted-foreground">Enregistré</span>
           )}
           {generalMutation.isError && (
             <span className="text-xs text-destructive">
               {generalMutation.error instanceof Error
                   ? generalMutation.error.message
-                  : "Failed to save"}
+                  : "Échec de l'enregistrement"}
             </span>
           )}
         </div>
@@ -352,12 +352,12 @@ export function CompanySettings() {
       {/* Hiring */}
       <div className="space-y-4" data-testid="company-settings-team-section">
         <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-          Hiring
+          Recrutement
         </div>
         <div className="rounded-md border border-border px-4 py-3">
           <ToggleField
-            label="Require board approval for new hires"
-            hint="New agent hires stay pending until approved by board."
+            label="Exiger l'approbation du conseil pour les nouvelles recrues"
+            hint="Les nouvelles recrues restent en attente jusqu'à approbation par le conseil."
             checked={!!selectedCompany.requireBoardApprovalForNewAgents}
             onChange={(v) => settingsMutation.mutate(v)}
             toggleTestId="company-settings-team-approval-toggle"
@@ -368,32 +368,32 @@ export function CompanySettings() {
       {/* Import / Export */}
       <div className="space-y-4">
         <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-          Company Packages
+          Paquets d'entreprise
         </div>
         <div className="rounded-md border border-border px-4 py-4">
           <p className="text-sm text-muted-foreground">
-            Import and export have moved to dedicated pages accessible from the{" "}
-            <a href="/org" className="underline hover:text-foreground">Org Chart</a> header.
+            L'import et l'export ont été déplacés vers des pages dédiées accessibles depuis l'en-tête{" "}
+            <a href="/org" className="underline hover:text-foreground">Organigramme</a>.
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             {cloudSyncEnabled ? (
               <Button size="sm" asChild>
                 <a href="/company/settings/cloud-upstream">
                   <CloudUpload className="mr-1.5 h-3.5 w-3.5" />
-                  Send to Paperclip Cloud
+                  Envoyer vers Kovv-ia Cloud
                 </a>
               </Button>
             ) : null}
             <Button size="sm" variant="outline" asChild>
               <a href="/company/export">
                 <Download className="mr-1.5 h-3.5 w-3.5" />
-                Export
+                Exporter
               </a>
             </Button>
             <Button size="sm" variant="outline" asChild>
               <a href="/company/import">
                 <Upload className="mr-1.5 h-3.5 w-3.5" />
-                Import
+                Importer
               </a>
             </Button>
           </div>
@@ -403,12 +403,11 @@ export function CompanySettings() {
       {/* Danger Zone */}
       <div className="space-y-4">
         <div className="text-xs font-medium text-destructive uppercase tracking-wide">
-          Danger Zone
+          Zone de danger
         </div>
         <div className="space-y-3 rounded-md border border-destructive/40 bg-destructive/5 px-4 py-4">
           <p className="text-sm text-muted-foreground">
-            Archive this company to hide it from the sidebar. This persists in
-            the database.
+            Archivez cette entreprise pour la masquer dans la barre latérale. Cette action est persistée en base de données.
           </p>
           <div className="flex items-center gap-2">
             <Button
@@ -421,7 +420,7 @@ export function CompanySettings() {
               onClick={() => {
                 if (!selectedCompanyId) return;
                 const confirmed = window.confirm(
-                  `Archive company "${selectedCompany.name}"? It will be hidden from the sidebar.`
+                  `Archiver l'entreprise "${selectedCompany.name}" ? Elle sera masquée dans la barre latérale.`
                 );
                 if (!confirmed) return;
                 const nextCompanyId =
@@ -437,16 +436,16 @@ export function CompanySettings() {
               }}
             >
               {archiveMutation.isPending
-                ? "Archiving..."
+                ? "Archivage..."
                 : selectedCompany.status === "archived"
-                ? "Already archived"
-                : "Archive company"}
+                ? "Déjà archivée"
+                : "Archiver l'entreprise"}
             </Button>
             {archiveMutation.isError && (
               <span className="text-xs text-destructive">
                 {archiveMutation.error instanceof Error
                   ? archiveMutation.error.message
-                  : "Failed to archive company"}
+                  : "Échec de l'archivage de l'entreprise"}
               </span>
             )}
           </div>

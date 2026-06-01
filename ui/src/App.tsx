@@ -168,15 +168,15 @@ function OnboardingRoutePage() {
     : null;
 
   const title = matchedCompany
-    ? `Add another agent to ${matchedCompany.name}`
+    ? `Ajouter un agent à ${matchedCompany.name}`
     : companies.length > 0
-      ? "Create another company"
-      : "Create your first company";
+      ? "Créer une autre entreprise"
+      : "Créez votre première entreprise";
   const description = matchedCompany
-    ? "Run onboarding again to add an agent and a starter task for this company."
+    ? "Relancez l'intégration pour ajouter un agent et une tâche de démarrage à cette entreprise."
     : companies.length > 0
-      ? "Run onboarding again to create another company and seed its first agent."
-      : "Get started by creating a company and your first agent.";
+      ? "Relancez l'intégration pour créer une autre entreprise et configurer son premier agent."
+      : "Commencez par créer une entreprise et votre premier agent.";
 
   return (
     <div className="mx-auto max-w-xl py-10">
@@ -191,7 +191,7 @@ function OnboardingRoutePage() {
                 : openOnboarding()
             }
           >
-            {matchedCompany ? "Add Agent" : "Start Onboarding"}
+            {matchedCompany ? "Ajouter un agent" : "Démarrer l'intégration"}
           </Button>
         </div>
       </div>
@@ -204,7 +204,7 @@ function CompanyRootRedirect() {
   const location = useLocation();
 
   if (loading) {
-    return <div className="mx-auto max-w-xl py-10 text-sm text-muted-foreground">Loading...</div>;
+    return <div className="mx-auto max-w-xl py-10 text-sm text-muted-foreground">Chargement...</div>;
   }
 
   const targetCompany = selectedCompany ?? companies[0] ?? null;
@@ -228,7 +228,7 @@ function UnprefixedBoardRedirect() {
   const { companies, selectedCompany, loading } = useCompany();
 
   if (loading) {
-    return <div className="mx-auto max-w-xl py-10 text-sm text-muted-foreground">Loading...</div>;
+    return <div className="mx-auto max-w-xl py-10 text-sm text-muted-foreground">Chargement...</div>;
   }
 
   const targetCompany = selectedCompany ?? companies[0] ?? null;
@@ -260,14 +260,14 @@ function NoCompaniesStartPage() {
     <div className="mx-auto max-w-xl py-10">
       <div className="rounded-lg border border-border bg-card p-6">
         <h1 className="text-xl font-semibold">
-          {t("app.noCompanies.title", { defaultValue: "Create your first company" })}
+          {t("app.noCompanies.title", { defaultValue: "Créez votre première entreprise" })}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {t("app.noCompanies.description", { defaultValue: "Get started by creating a company." })}
+          {t("app.noCompanies.description", { defaultValue: "Commencez par créer une entreprise." })}
         </p>
         <div className="mt-4">
           <Button onClick={() => openOnboarding()}>
-            {t("app.noCompanies.newCompany", { defaultValue: "New Company" })}
+            {t("app.noCompanies.newCompany", { defaultValue: "Nouvelle entreprise" })}
           </Button>
         </div>
       </div>

@@ -100,6 +100,7 @@ import {
   shouldPreserveComposerViewport,
 } from "../lib/issue-chat-scroll";
 import { formatAssigneeUserLabel } from "../lib/assignees";
+import { formatStatusLabel } from "../lib/status-colors";
 import { useOptionalToastActions } from "../context/ToastContext";
 import type { CompanyUserProfile } from "../lib/company-members";
 import { timeAgo } from "../lib/timeAgo";
@@ -432,17 +433,17 @@ function IssueAssigneePausedNotice({ agent }: { agent: Agent | null }) {
 
   const pauseDetail =
     agent.pauseReason === "budget"
-      ? "It was paused by a budget hard stop."
+      ? "Il a été mis en pause par une limite budgétaire stricte."
       : agent.pauseReason === "system"
-        ? "It was paused by the system."
-        : "It was paused manually.";
+        ? "Il a été mis en pause par le système."
+        : "Il a été mis en pause manuellement.";
 
   return (
     <div className="mb-3 rounded-md border border-orange-300/70 bg-orange-50/90 px-3 py-2.5 text-sm text-orange-950 shadow-sm dark:border-orange-500/40 dark:bg-orange-500/10 dark:text-orange-100">
       <div className="flex items-start gap-2">
         <PauseCircle className="mt-0.5 h-4 w-4 shrink-0 text-orange-600 dark:text-orange-300" />
         <p className="min-w-0 leading-5">
-          <span className="font-medium">{agent.name}</span> is paused. New runs will not start until the agent is resumed. {pauseDetail}
+          <span className="font-medium">{agent.name}</span> est en pause. Aucune nouvelle exécution ne démarrera avant la reprise de l'agent. {pauseDetail}
         </p>
       </div>
     </div>
@@ -454,7 +455,7 @@ function fallbackAuthorLabel(message: ThreadMessage) {
   if (typeof custom?.["authorName"] === "string") return custom["authorName"];
   if (typeof custom?.["runAgentName"] === "string") return custom["runAgentName"];
   if (message.role === "assistant") return "Agent";
-  if (message.role === "user") return "You";
+  if (message.role === "user") return "Vous";
   return "System";
 }
 
@@ -495,9 +496,9 @@ function IssueChatFallbackThread({
         <div className="flex items-start gap-2">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
           <div className="space-y-1">
-            <p className="font-medium">Chat renderer hit an internal state error.</p>
+            <p className="font-medium">Le rendu de la discussion a rencontré une erreur interne.</p>
             <p className="text-xs opacity-80">
-              Showing a safe fallback transcript instead of crashing the issues page.
+              Affichage d'une transcription de secours à la place de la page de tickets.
             </p>
           </div>
         </div>
@@ -530,7 +531,7 @@ function IssueChatFallbackThread({
                   {lines.length > 0 ? lines.map((line, index) => (
                     <MarkdownBody key={`${message.id}:fallback:${index}`}>{line}</MarkdownBody>
                   )) : (
-                    <p className="text-sm text-muted-foreground">No message content.</p>
+                    <p className="text-sm text-muted-foreground">Aucun contenu de message.</p>
                   )}
                 </div>
               </div>
@@ -686,8 +687,8 @@ export function SuccessfulRunHandoffCommentCallout({
 }
 
 function humanizeValue(value: string | null) {
-  if (!value) return "None";
-  return value.replace(/_/g, " ");
+  if (!value) return "Aucun";
+  return formatStatusLabel(value);
 }
 
 function formatTimelineAssigneeLabel(
@@ -789,8 +790,8 @@ function toolCountSummary(toolParts: ToolCallMessagePart[]): string | null {
     else other++;
   }
   const parts: string[] = [];
-  if (commands > 0) parts.push(`ran ${commands} command${commands === 1 ? "" : "s"}`);
-  if (other > 0) parts.push(`called ${other} tool${other === 1 ? "" : "s"}`);
+  if (commands > 0) parts.push(`${commands} commande${commands === 1 ? "" : "s"} exécutée${commands === 1 ? "" : "s"}`);
+  if (other > 0) parts.push(`${other} outil${other === 1 ? "" : "s"} appelé${other === 1 ? "" : "s"}`);
   return parts.join(", ");
 }
 
@@ -849,15 +850,15 @@ function IssueChatChainOfThought({
   let headerVerb: string;
   let headerSuffix: string | null = null;
   if (isActive) {
-    headerVerb = "Working";
-    if (liveElapsed) headerSuffix = `for ${liveElapsed}`;
+    headerVerb = "En cours";
+    if (liveElapsed) headerSuffix = `depuis ${liveElapsed}`;
   } else if (segmentTiming) {
     const durationMs = segmentTiming.endMs - segmentTiming.startMs;
     const durationText = formatDurationWords(durationMs);
-    headerVerb = "Worked";
-    if (durationText) headerSuffix = `for ${durationText}`;
+    headerVerb = "Effectué";
+    if (durationText) headerSuffix = `en ${durationText}`;
   } else {
-    headerVerb = "Worked";
+    headerVerb = "Effectué";
   }
 
   const toolSummary = toolCountSummary(toolParts);
@@ -1039,8 +1040,8 @@ function CopyablePreBlock({ children, className }: { children: string; className
           "absolute right-1.5 top-1.5 inline-flex h-6 w-6 items-center justify-center rounded-md bg-background/80 text-muted-foreground opacity-0 backdrop-blur-sm transition-opacity hover:text-foreground group-hover/pre:opacity-100",
           copied && "opacity-100",
         )}
-        title="Copy"
-        aria-label="Copy"
+        title="Copier"
+        aria-label="Copier"
         onClick={() => {
           void navigator.clipboard.writeText(children).then(() => {
             setCopied(true);
@@ -1126,7 +1127,7 @@ function IssueChatToolPart({
             {nonIntentDetails.length > 0 ? (
               <div>
                 <div className="mb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
-                  Input
+                  Entrée
                 </div>
                 <dl className="space-y-1.5">
                   {nonIntentDetails.map((detail) => (
@@ -1144,7 +1145,7 @@ function IssueChatToolPart({
             ) : rawArgsText ? (
               <div>
                 <div className="mb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
-                  Input
+                  Entrée
                 </div>
                 <CopyablePreBlock className="overflow-x-auto rounded-md bg-accent/30 p-2 text-[11px] leading-4 text-foreground/70">{rawArgsText}</CopyablePreBlock>
               </div>
@@ -1152,7 +1153,7 @@ function IssueChatToolPart({
             {result !== undefined ? (
               <div>
                 <div className="mb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
-                  Result
+                  Résultat
                 </div>
                 <CopyablePreBlock className="overflow-x-auto rounded-md bg-accent/30 p-2 text-[11px] leading-4 text-foreground/70">{resultText}</CopyablePreBlock>
               </div>
@@ -1334,7 +1335,7 @@ function IssueChatUserMessage({
                 disabled={isInterruptingQueuedRun}
                 onClick={() => void onInterruptQueued(queueTargetRunId)}
               >
-                {isInterruptingQueuedRun ? "Interrupting..." : "Interrupt"}
+                {isInterruptingQueuedRun ? "Interruption…" : "Interrompre"}
               </Button>
             ) : null}
             {onCancelQueued ? (
@@ -1344,7 +1345,7 @@ function IssueChatUserMessage({
                 className="h-6 border-amber-300 px-2 text-[11px] text-amber-900 hover:bg-amber-100/80 hover:text-amber-950 dark:border-amber-500/40 dark:text-amber-100 dark:hover:bg-amber-500/10"
                 onClick={() => onCancelQueued(commentId)}
               >
-                Cancel
+                Annuler
               </Button>
             ) : null}
           </div>
@@ -1356,7 +1357,7 @@ function IssueChatUserMessage({
 
       {pending ? (
         <div className={cn("mt-1 flex px-1 text-[11px] text-muted-foreground", isCurrentUser ? "justify-end" : "justify-start")}>
-          Sending...
+          Envoi…
         </div>
       ) : (
         <div
@@ -1381,8 +1382,8 @@ function IssueChatUserMessage({
           <button
             type="button"
             className="inline-flex h-6 w-6 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-            title="Copy message"
-            aria-label="Copy message"
+            title="Copier le message"
+            aria-label="Copier le message"
             onClick={() => {
               const text = message.content
                 .filter((p): p is { type: "text"; text: string } => p.type === "text")
@@ -1537,7 +1538,7 @@ function IssueChatAssistantMessage({
               {isRunning ? (
                 <span className="inline-flex items-center gap-1 rounded-full border border-cyan-400/40 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.14em] text-cyan-700 dark:text-cyan-200">
                   <Loader2 className="h-3 w-3 animate-spin" />
-                  Running
+                  En cours
                 </span>
               ) : null}
             </div>
@@ -1615,8 +1616,8 @@ function IssueChatAssistantMessage({
                       variant="ghost"
                       size="icon-xs"
                       className="text-muted-foreground hover:text-foreground"
-                      title="More actions"
-                      aria-label="More actions"
+                      title="Plus d'actions"
+                      aria-label="Plus d'actions"
                     >
                       <MoreHorizontal className="h-3.5 w-3.5" />
                     </Button>
@@ -1628,7 +1629,7 @@ function IssueChatAssistantMessage({
                       }}
                     >
                       <Copy className="mr-2 h-3.5 w-3.5" />
-                      Copy message
+                      Copier le message
                     </DropdownMenuItem>
                     {canStopRun && onStopRun && runId ? (
                       <DropdownMenuItem
@@ -1654,7 +1655,7 @@ function IssueChatAssistantMessage({
                       <DropdownMenuItem asChild>
                         <Link to={runHref} target="_blank" rel="noreferrer noopener">
                           <Search className="mr-2 h-3.5 w-3.5" />
-                          View run
+                          Voir l'exécution
                         </Link>
                       </DropdownMenuItem>
                     ) : null}
@@ -1759,8 +1760,8 @@ function IssueChatFeedbackButtons({
             ? "text-green-600 dark:text-green-400"
             : "text-muted-foreground hover:bg-accent hover:text-foreground",
         )}
-        title="Helpful"
-        aria-label="Helpful"
+        title="Utile"
+        aria-label="Utile"
         onClick={handleThumbsUp}
       >
         <ThumbsUp className="h-3.5 w-3.5" />
@@ -1776,19 +1777,19 @@ function IssueChatFeedbackButtons({
                 ? "text-amber-600 dark:text-amber-400"
                 : "text-muted-foreground hover:bg-accent hover:text-foreground",
             )}
-            title="Needs work"
-            aria-label="Needs work"
+            title="À améliorer"
+            aria-label="À améliorer"
             onClick={handleThumbsDown}
           >
             <ThumbsDown className="h-3.5 w-3.5" />
           </button>
         </PopoverTrigger>
         <PopoverContent side="top" align="start" className="w-80 p-3">
-          <div className="mb-2 text-sm font-medium">What could have been better?</div>
+          <div className="mb-2 text-sm font-medium">Qu'est-ce qui aurait pu être mieux ?</div>
           <Textarea
             value={downvoteReason}
             onChange={(event) => setDownvoteReason(event.target.value)}
-            placeholder="Add a short note"
+            placeholder="Ajouter une courte note"
             className="min-h-20 resize-y bg-background text-sm"
             disabled={isSaving}
           />
@@ -1803,7 +1804,7 @@ function IssueChatFeedbackButtons({
                 setDownvoteReason("");
               }}
             >
-              Dismiss
+              Ignorer
             </Button>
             <Button
               type="button"
@@ -1811,7 +1812,7 @@ function IssueChatFeedbackButtons({
               disabled={isSaving || !downvoteReason.trim()}
               onClick={handleSubmitReason}
             >
-              {isSaving ? "Saving..." : "Save note"}
+              {isSaving ? "Enregistrement…" : "Enregistrer la note"}
             </Button>
           </div>
         </PopoverContent>
@@ -1828,21 +1829,21 @@ function IssueChatFeedbackButtons({
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Save your feedback sharing preference</DialogTitle>
+            <DialogTitle>Enregistrer votre préférence de partage de retour</DialogTitle>
             <DialogDescription>
-              Choose whether voted AI outputs can be shared with Paperclip Labs. This
-              answer becomes the default for future thumbs up and thumbs down votes.
+              Choisissez si les sorties IA notées peuvent être partagées avec Kovv-ia Labs. Cette
+              réponse devient le paramètre par défaut pour les votes futurs.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 text-sm text-muted-foreground">
-            <p>This vote is always saved locally.</p>
+            <p>Ce vote est toujours enregistré localement.</p>
             <p>
-              Choose <span className="font-medium text-foreground">Always allow</span> to share
-              this vote and future voted AI outputs. Choose{" "}
-              <span className="font-medium text-foreground">Don't allow</span> to keep this vote
-              and future votes local.
+              Choisissez <span className="font-medium text-foreground">Toujours autoriser</span> pour partager
+              ce vote et les futures sorties IA notées. Choisissez{" "}
+              <span className="font-medium text-foreground">Ne pas autoriser</span> pour conserver ce vote
+              et les futurs votes localement.
             </p>
-            <p>You can change this later in Instance Settings &gt; General.</p>
+            <p>Vous pouvez modifier ce paramètre ultérieurement dans Paramètres de l'instance &gt; Général.</p>
             {termsUrl ? (
               <a
                 href={termsUrl}
@@ -1850,7 +1851,7 @@ function IssueChatFeedbackButtons({
                 rel="noreferrer"
                 className="inline-flex text-sm text-foreground underline underline-offset-4"
               >
-                Read our terms of service
+                Lire nos conditions d'utilisation
               </a>
             ) : null}
           </div>
@@ -1867,7 +1868,7 @@ function IssueChatFeedbackButtons({
                 ).then(() => setPendingSharingDialog(null));
               }}
             >
-              {isSaving ? "Saving..." : "Don't allow"}
+              {isSaving ? "Enregistrement…" : "Ne pas autoriser"}
             </Button>
             <Button
               type="button"
@@ -1880,7 +1881,7 @@ function IssueChatFeedbackButtons({
                 }).then(() => setPendingSharingDialog(null));
               }}
             >
-              {isSaving ? "Saving..." : "Always allow"}
+              {isSaving ? "Enregistrement…" : "Toujours autoriser"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1930,7 +1931,7 @@ function ExpiredRequestConfirmationActivity({
     <div className="min-w-0 flex-1">
       <div className={cn("flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs", isCurrentUser && "justify-end")}>
         <span className="font-medium text-foreground">{actorName}</span>
-        <span className="text-muted-foreground">updated this task</span>
+        <span className="text-muted-foreground">a mis à jour cette tâche</span>
         <a
           href={anchorId ? `#${anchorId}` : undefined}
           className="text-xs text-muted-foreground transition-colors hover:text-foreground hover:underline"
@@ -1945,7 +1946,7 @@ function ExpiredRequestConfirmationActivity({
           onClick={() => setExpanded((current) => !current)}
         >
           <ChevronDown className={cn("h-3 w-3 transition-transform", expanded && "rotate-180")} />
-          {expanded ? "Hide confirmation" : "Expired confirmation"}
+          {expanded ? "Masquer la confirmation" : "Confirmation expirée"}
         </button>
       </div>
       {expanded ? (
@@ -2153,7 +2154,7 @@ function StaleDispositionWarningDetails({
   sections: SystemNoticeMetadataSection[];
 }) {
   if (sections.length === 0) {
-    return <div className="text-xs leading-5 text-muted-foreground">No additional details.</div>;
+    return <div className="text-xs leading-5 text-muted-foreground">Aucun détail supplémentaire.</div>;
   }
 
   return (
@@ -2204,7 +2205,7 @@ function StaleDispositionWarningRow({
             onClick={() => setOpen((value) => !value)}
           >
             <span className="text-sm font-medium text-foreground/80">
-              Stale disposition warning
+              Avertissement de disposition obsolète
             </span>
             <span className="ml-auto flex items-center gap-1.5">
               {message.createdAt ? (
@@ -2256,12 +2257,12 @@ function SystemNoticeCommentRow({
   const source = (() => {
     const runAgentName = runAgentId ? agentMap?.get(runAgentId)?.name ?? null : null;
     if (authorType === "system") {
-      const label = runAgentName ?? "Paperclip";
+      const label = runAgentName ?? "Kovv-ia";
       if (runAgentId && runId) return { label, href: `/agents/${runAgentId}/runs/${runId}` };
       return { label };
     }
     if (runAgentId && runId) {
-      return { label: authorName ?? runAgentName ?? "Paperclip", href: `/agents/${runAgentId}/runs/${runId}` };
+      return { label: authorName ?? runAgentName ?? "Kovv-ia", href: `/agents/${runAgentId}/runs/${runId}` };
     }
     if (authorName) return { label: authorName };
     return undefined;
@@ -2329,8 +2330,8 @@ function SystemNoticeCommentRow({
             <button
               type="button"
               className="inline-flex h-6 w-6 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-              title="Copy link"
-              aria-label="Copy link to system notice"
+              title="Copier le lien"
+              aria-label="Copier le lien vers l'avis système"
               onClick={handleCopyLink}
             >
               {copiedLink ? <Check className="h-3.5 w-3.5" /> : <Paperclip className="h-3.5 w-3.5" />}
@@ -2339,8 +2340,8 @@ function SystemNoticeCommentRow({
           <button
             type="button"
             className="inline-flex h-6 w-6 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-            title="Copy notice text"
-            aria-label="Copy system notice"
+            title="Copier le texte de l'avis"
+            aria-label="Copier l'avis système"
             onClick={handleCopy}
           >
             {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
@@ -2432,7 +2433,7 @@ function IssueChatSystemMessage({ message }: { message: ThreadMessage }) {
         <div className={cn("flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 text-xs", isCurrentUser && "justify-end")}>
           <span className="font-medium text-foreground">{actorName}</span>
           <span className="text-muted-foreground">
-            {custom.followUpRequested === true ? "requested follow-up" : "updated this task"}
+            {custom.followUpRequested === true ? "a demandé un suivi" : "a mis à jour cette tâche"}
           </span>
           <a
             href={anchorId ? `#${anchorId}` : undefined}
@@ -2445,7 +2446,7 @@ function IssueChatSystemMessage({ message }: { message: ThreadMessage }) {
         {statusChange ? (
           <div className={cn("flex flex-wrap items-center gap-1.5 text-xs", isCurrentUser && "justify-end")}>
             <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Status
+              Statut
             </span>
             <span className="text-muted-foreground">{humanizeValue(statusChange.from)}</span>
             <ArrowRight className="h-3 w-3 text-muted-foreground" />
@@ -2456,7 +2457,7 @@ function IssueChatSystemMessage({ message }: { message: ThreadMessage }) {
         {assigneeChange ? (
           <div className={cn("flex flex-wrap items-center gap-1.5 text-xs", isCurrentUser && "justify-end")}>
             <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Assignee
+              Responsable
             </span>
             <span className="text-muted-foreground">
               {formatTimelineAssigneeLabel(assigneeChange.from, agentMap, currentUserId, userLabelMap)}
@@ -2471,7 +2472,7 @@ function IssueChatSystemMessage({ message }: { message: ThreadMessage }) {
         {workspaceChange ? (
           <div className={cn("flex flex-wrap items-center gap-1.5 text-xs", isCurrentUser && "justify-end")}>
             <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Workspace
+              Espace de travail
             </span>
             <span className="text-muted-foreground">
               {formatTimelineWorkspaceLabel(workspaceChange.from)}
@@ -2532,7 +2533,7 @@ function IssueChatSystemMessage({ message }: { message: ThreadMessage }) {
               <Link to={`/agents/${runAgentId}`} className="font-medium text-foreground transition-colors hover:underline">
                 {displayedRunAgentName}
               </Link>
-              <span className="text-muted-foreground">run</span>
+              <span className="text-muted-foreground">exécution</span>
               <Link
                 to={`/agents/${runAgentId}/runs/${runId}`}
                 className="inline-flex items-center rounded-md border border-border bg-accent/40 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground"
@@ -3207,8 +3208,8 @@ const IssueChatComposer = forwardRef<IssueChatComposerHandle, IssueChatComposerP
       && !unassignedConfirmed
     ) {
       toastActions?.pushToast({
-        title: "No assignee selected",
-        body: "Pick an assignee or click Send again to post without one.",
+        title: "Aucun responsable sélectionné",
+        body: "Choisissez un responsable ou cliquez à nouveau sur Envoyer pour publier sans responsable.",
         tone: "warn",
         dedupeKey: `issue-chat-no-assignee:${draftKey ?? ""}`,
       });
@@ -3303,7 +3304,7 @@ const IssueChatComposer = forwardRef<IssueChatComposerHandle, IssueChatComposerP
       } else {
         setComposerAttachments((prev) => prev.map((item) =>
           item.id === attachmentId
-            ? { ...item, status: "error", error: "This file type cannot be attached here" }
+            ? { ...item, status: "error", error: "Ce type de fichier ne peut pas être joint ici" }
             : item,
         ));
       }
@@ -3313,7 +3314,7 @@ const IssueChatComposer = forwardRef<IssueChatComposerHandle, IssueChatComposerP
           ? {
               ...item,
               status: "error",
-              error: err instanceof Error ? err.message : "Upload failed",
+              error: err instanceof Error ? err.message : "Téléversement échoué",
             }
           : item,
       ));
@@ -3417,9 +3418,9 @@ const IssueChatComposer = forwardRef<IssueChatComposerHandle, IssueChatComposerP
               <Paperclip className="h-4 w-4" />
             </span>
             <div className="min-w-0">
-              <div className="text-sm font-medium text-foreground">Drop to upload</div>
+              <div className="text-sm font-medium text-foreground">Déposer pour téléverser</div>
               <div className="mt-0.5 text-xs leading-5 text-muted-foreground">
-                Images insert into the reply. Other files are added to this issue.
+                Les images s'insèrent dans la réponse. Les autres fichiers sont ajoutés à ce ticket.
               </div>
             </div>
           </div>
@@ -3430,7 +3431,7 @@ const IssueChatComposer = forwardRef<IssueChatComposerHandle, IssueChatComposerP
         ref={editorRef}
         value={body}
         onChange={setBody}
-        placeholder="Reply"
+        placeholder="Répondre"
         mentions={mentions}
         onSubmit={handleSubmit}
         imageUploadHandler={onImageUpload}
@@ -3454,12 +3455,12 @@ const IssueChatComposer = forwardRef<IssueChatComposerHandle, IssueChatComposerP
             const sizeLabel = formatAttachmentSize(attachment.size);
             const statusLabel =
               attachment.status === "uploading"
-                ? "Uploading to issue"
+                ? "Téléversement vers le ticket"
                 : attachment.status === "error"
-                  ? attachment.error ?? "Upload failed"
+                  ? attachment.error ?? "Téléversement échoué"
                   : attachment.inline
-                    ? "Inserted inline"
-                    : "Attached to issue";
+                    ? "Inséré en ligne"
+                    : "Joint au ticket";
             return (
               <div
                 key={attachment.id}
@@ -3505,7 +3506,7 @@ const IssueChatComposer = forwardRef<IssueChatComposerHandle, IssueChatComposerP
                 size="icon-sm"
                 onClick={() => attachInputRef.current?.click()}
                 disabled={attaching}
-                title="Attach file"
+                title="Joindre un fichier"
               >
                 <Paperclip className="h-4 w-4" />
               </Button>
@@ -3518,7 +3519,7 @@ const IssueChatComposer = forwardRef<IssueChatComposerHandle, IssueChatComposerP
                   variant="ghost"
                   size="icon-sm"
                   data-testid="issue-chat-composer-work-mode-menu"
-                  title="More composer options"
+                  title="Plus d'options du compositeur"
                 >
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
@@ -3542,7 +3543,7 @@ const IssueChatComposer = forwardRef<IssueChatComposerHandle, IssueChatComposerP
                   ) : (
                     <ClipboardList className="h-3.5 w-3.5 shrink-0 text-amber-600 dark:text-amber-300" aria-hidden />
                   )}
-                  <span>{isPlanning ? "Switch to standard" : "Switch to planning"}</span>
+                  <span>{isPlanning ? "Passer en mode standard" : "Passer en mode planification"}</span>
                 </button>
               </PopoverContent>
             </Popover>
@@ -3553,12 +3554,12 @@ const IssueChatComposer = forwardRef<IssueChatComposerHandle, IssueChatComposerP
               data-testid="issue-chat-composer-work-mode-toggle"
               data-pending-work-mode={pendingWorkMode}
               aria-pressed
-              title="Planning mode is on for this submission. Click to switch to Standard."
+              title="Le mode planification est activé pour cette soumission. Cliquez pour passer en standard."
               onClick={() => setPendingWorkMode("standard")}
               className="inline-flex items-center gap-1.5 rounded-md border border-amber-500/60 bg-amber-500/15 px-2 py-1 text-xs text-amber-800 transition-colors hover:bg-amber-500/25 dark:border-amber-500/50 dark:bg-amber-500/15 dark:text-amber-200 dark:hover:bg-amber-500/25"
             >
               <ClipboardList className="h-3.5 w-3.5" aria-hidden />
-              <span>Planning</span>
+              <span>Planification</span>
             </button>
           ) : null}
         </div>
@@ -3567,14 +3568,14 @@ const IssueChatComposer = forwardRef<IssueChatComposerHandle, IssueChatComposerP
           <InlineEntitySelector
             value={reassignTarget}
             options={reassignOptions}
-            placeholder="Assignee"
-            noneLabel="No assignee"
-            searchPlaceholder="Search assignees..."
-            emptyMessage="No assignees found."
+            placeholder="Responsable"
+            noneLabel="Aucun responsable"
+            searchPlaceholder="Rechercher des responsables…"
+            emptyMessage="Aucun responsable trouvé."
             onChange={setReassignTarget}
             className="h-8 text-xs"
             renderTriggerValue={(option) => {
-              if (!option) return <span className="text-muted-foreground">Assignee</span>;
+              if (!option) return <span className="text-muted-foreground">Responsable</span>;
               const agentId = option.id.startsWith("agent:") ? option.id.slice("agent:".length) : null;
               const agent = agentId ? agentMap?.get(agentId) : null;
               return (
@@ -3603,7 +3604,7 @@ const IssueChatComposer = forwardRef<IssueChatComposerHandle, IssueChatComposerP
         ) : null}
 
         <Button size="sm" disabled={!canSubmit} onClick={() => void handleSubmit()}>
-          {submitting ? "Posting..." : "Send"}
+          {submitting ? "Publication…" : "Envoyer"}
         </Button>
       </div>
     </div>
@@ -4185,8 +4186,8 @@ export function IssueChatThread({
   const resolvedShowJumpToLatest = showJumpToLatest ?? variant === "full";
   const resolvedEmptyMessage = emptyMessage
     ?? (variant === "embedded"
-      ? "No run output yet."
-      : "This issue conversation is empty. Start with a message below.");
+      ? "Aucune sortie d'exécution pour l'instant."
+      : "Cette conversation est vide. Commencez par un message ci-dessous.");
   const previousErrorBoundaryMessagesRef = useRef<readonly ThreadMessage[] | null>(null);
   const errorBoundaryResetVersionRef = useRef(0);
   if (previousErrorBoundaryMessagesRef.current !== messages) {
@@ -4206,7 +4207,7 @@ export function IssueChatThread({
               onClick={handleJumpToLatest}
               className="text-xs text-muted-foreground transition-colors hover:text-foreground"
             >
-              Jump to latest
+              Aller au plus récent
             </button>
           </div>
         ) : null}
@@ -4276,10 +4277,10 @@ export function IssueChatThread({
                   {legacyRecoverySourceIssue ? (
                     <SystemNotice
                       tone="info"
-                      label="Legacy recovery issue"
+                      label="Ticket de récupération hérité"
                       body={
                         <span>
-                          Legacy recovery issue. Newer recovery actions live on the source issue
+                          Ticket de récupération hérité. Les nouvelles actions de récupération se trouvent sur le ticket source
                           {legacyRecoverySourceIssue.identifier ? (
                             <>
                               {" — "}

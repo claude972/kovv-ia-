@@ -111,34 +111,34 @@ function FinanceSummaryCard({
   return (
     <Card>
       <CardHeader className="px-5 pt-5 pb-2">
-        <CardTitle className="text-base">Finance ledger</CardTitle>
+        <CardTitle className="text-base">Grand livre financier</CardTitle>
         <CardDescription>
-          Account-level charges that do not map to a single inference request.
+          Charges au niveau du compte qui ne correspondent pas à une seule requête d'inférence.
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-3 px-5 pb-5 pt-2 sm:grid-cols-2 xl:grid-cols-4">
         <MetricTile
-          label="Debits"
+          label="Débits"
           value={formatCents(debitCents)}
-          subtitle={`${eventCount} total event${eventCount === 1 ? "" : "s"} in range`}
+          subtitle={`${eventCount} événement${eventCount === 1 ? "" : "s"} au total dans la période`}
           icon={ArrowUpRight}
         />
         <MetricTile
-          label="Credits"
+          label="Crédits"
           value={formatCents(creditCents)}
-          subtitle="Refunds, offsets, and credit returns"
+          subtitle="Remboursements, compensations et retours de crédit"
           icon={ArrowDownLeft}
         />
         <MetricTile
           label="Net"
           value={formatCents(netCents)}
-          subtitle="Debit minus credit for the selected period"
+          subtitle="Débits moins crédits sur la période sélectionnée"
           icon={ReceiptText}
         />
         <MetricTile
-          label="Estimated"
+          label="Estimé"
           value={formatCents(estimatedDebitCents)}
-          subtitle="Estimated debits that are not yet invoice-authoritative"
+          subtitle="Débits estimés non encore confirmés par facture"
           icon={Coins}
         />
       </CardContent>
@@ -168,7 +168,7 @@ export function Costs() {
   } = useDateRange();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Costs" }]);
+    setBreadcrumbs([{ label: "Coûts" }]);
   }, [setBreadcrumbs]);
 
   const [today, setToday] = useState(() => new Date().toDateString());
@@ -464,7 +464,7 @@ export function Costs() {
         value: "all",
         label: (
           <span className="flex items-center gap-1.5">
-            <span>All providers</span>
+            <span>Tous les fournisseurs</span>
             {providerKeys.length > 0 ? (
               <>
                 <span className="font-mono text-xs text-muted-foreground">{formatTokens(allTokens)}</span>
@@ -496,7 +496,7 @@ export function Costs() {
         value: "all",
         label: (
           <span className="flex items-center gap-1.5">
-            <span>All billers</span>
+            <span>Tous les facturiers</span>
             {billerKeys.length > 0 ? (
               <>
                 <span className="font-mono text-xs text-muted-foreground">{formatTokens(allTokens)}</span>
@@ -529,7 +529,7 @@ export function Costs() {
   }), [budgetPolicies]);
 
   if (!selectedCompanyId) {
-    return <EmptyState icon={DollarSign} message="Select a company to view costs." />;
+    return <EmptyState icon={DollarSign} message="Sélectionnez une entreprise pour consulter les coûts." />;
   }
 
   const showCustomPrompt = preset === "custom" && !customReady;
@@ -541,9 +541,9 @@ export function Costs() {
       <div className="space-y-5">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div>
-                <h1 className="text-3xl font-semibold tracking-tight">Costs</h1>
+                <h1 className="text-3xl font-semibold tracking-tight">Coûts</h1>
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-                  Inference spend, platform fees, credits, and live quota windows.
+                  Dépenses d'inférence, frais de plateforme, crédits et fenêtres de quota en direct.
                 </p>
             </div>
 
@@ -581,9 +581,9 @@ export function Costs() {
 
           <div className="grid gap-3 lg:grid-cols-4">
             <MetricTile
-              label="Inference spend"
+              label="Dépenses d'inférence"
               value={formatCents(spendData?.summary.spendCents ?? 0)}
-              subtitle={`${formatTokens(inferenceTokenTotal)} tokens across request-scoped events`}
+              subtitle={`${formatTokens(inferenceTokenTotal)} tokens sur les événements liés aux requêtes`}
               icon={DollarSign}
             />
             <MetricTile
@@ -591,27 +591,27 @@ export function Costs() {
               value={activeBudgetIncidents.length > 0 ? String(activeBudgetIncidents.length) : (
                 spendData?.summary.budgetCents && spendData.summary.budgetCents > 0
                   ? `${spendData.summary.utilizationPercent}%`
-                  : "Open"
+                  : "Ouvert"
               )}
               subtitle={
                 activeBudgetIncidents.length > 0
-                  ? `${budgetData?.pausedAgentCount ?? 0} agents paused · ${budgetData?.pausedProjectCount ?? 0} projects paused`
+                  ? `${budgetData?.pausedAgentCount ?? 0} agents en pause · ${budgetData?.pausedProjectCount ?? 0} projets en pause`
                   : spendData?.summary.budgetCents && spendData.summary.budgetCents > 0
-                    ? `${formatCents(spendData.summary.spendCents)} of ${formatCents(spendData.summary.budgetCents)}`
-                    : "No monthly cap configured"
+                    ? `${formatCents(spendData.summary.spendCents)} sur ${formatCents(spendData.summary.budgetCents)}`
+                    : "Aucun plafond mensuel configuré"
               }
               icon={Coins}
             />
             <MetricTile
-              label="Finance net"
+              label="Net finance"
               value={formatCents(financeData?.summary.netCents ?? 0)}
-              subtitle={`${formatCents(financeData?.summary.debitCents ?? 0)} debits · ${formatCents(financeData?.summary.creditCents ?? 0)} credits`}
+              subtitle={`${formatCents(financeData?.summary.debitCents ?? 0)} débits · ${formatCents(financeData?.summary.creditCents ?? 0)} crédits`}
               icon={ReceiptText}
             />
             <MetricTile
-              label="Finance events"
+              label="Événements finance"
               value={String(financeData?.summary.eventCount ?? 0)}
-              subtitle={`${formatCents(financeData?.summary.estimatedDebitCents ?? 0)} estimated in range`}
+              subtitle={`${formatCents(financeData?.summary.estimatedDebitCents ?? 0)} estimés dans la période`}
               icon={ArrowUpRight}
             />
           </div>
@@ -619,16 +619,16 @@ export function Costs() {
 
       <Tabs value={mainTab} onValueChange={(value) => setMainTab(value as typeof mainTab)}>
         <TabsList variant="line" className="justify-start">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
           <TabsTrigger value="budgets">Budgets</TabsTrigger>
-          <TabsTrigger value="providers">Providers</TabsTrigger>
-          <TabsTrigger value="billers">Billers</TabsTrigger>
+          <TabsTrigger value="providers">Fournisseurs</TabsTrigger>
+          <TabsTrigger value="billers">Facturiers</TabsTrigger>
           <TabsTrigger value="finance">Finance</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-4 space-y-4">
           {showCustomPrompt ? (
-            <p className="text-sm text-muted-foreground">Select a start and end date to load data.</p>
+            <p className="text-sm text-muted-foreground">Sélectionnez une date de début et de fin pour charger les données.</p>
           ) : showOverviewLoading ? (
             <PageSkeleton variant="costs" />
           ) : overviewError ? (
@@ -657,9 +657,9 @@ export function Costs() {
               <div className="grid gap-4 xl:grid-cols-[1.3fr,1fr]">
                 <Card>
                   <CardHeader className="px-5 pt-5 pb-2">
-                    <CardTitle className="text-base">Inference ledger</CardTitle>
+                    <CardTitle className="text-base">Grand livre d'inférence</CardTitle>
                     <CardDescription>
-                      Request-scoped inference spend for the selected period.
+                      Dépenses d'inférence liées aux requêtes pour la période sélectionnée.
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4 px-5 pb-5 pt-2">
@@ -671,11 +671,11 @@ export function Costs() {
                         <div className="mt-1 text-sm text-muted-foreground">
                           {spendData?.summary.budgetCents && spendData.summary.budgetCents > 0
                             ? `Budget ${formatCents(spendData.summary.budgetCents)}`
-                            : "Unlimited budget"}
+                            : "Budget illimité"}
                         </div>
                       </div>
                       <div className="border border-border px-4 py-3 text-right">
-                        <div className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">usage</div>
+                        <div className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">utilisation</div>
                         <div className="mt-1 text-lg font-medium tabular-nums">
                           {formatTokens(inferenceTokenTotal)}
                         </div>
@@ -697,7 +697,7 @@ export function Costs() {
                           />
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {spendData.summary.utilizationPercent}% of monthly budget consumed in this range.
+                          {spendData.summary.utilizationPercent}% du budget mensuel consommé sur cette période.
                         </div>
                       </div>
                     ) : null}
@@ -716,12 +716,12 @@ export function Costs() {
               <div className="grid gap-4 xl:grid-cols-[1.25fr,0.95fr]">
                 <Card>
                   <CardHeader className="px-5 pt-5 pb-2">
-                    <CardTitle className="text-base">By agent</CardTitle>
-                    <CardDescription>What each agent consumed in the selected period.</CardDescription>
+                    <CardTitle className="text-base">Par agent</CardTitle>
+                    <CardDescription>Ce que chaque agent a consommé sur la période sélectionnée.</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-2 px-5 pb-5 pt-2">
                     {(spendData?.byAgent.length ?? 0) === 0 ? (
-                      <p className="text-sm text-muted-foreground">No cost events yet.</p>
+                      <p className="text-sm text-muted-foreground">Aucun événement de coût pour l'instant.</p>
                     ) : (
                       spendData?.byAgent.map((row) => {
                         const modelRows = agentModelRows.get(row.agentId) ?? [];
@@ -747,7 +747,7 @@ export function Costs() {
                               <div className="text-right text-sm tabular-nums">
                                 <div className="font-medium">{formatCents(row.costCents)}</div>
                                 <div className="text-xs text-muted-foreground">
-                                  in {formatTokens(row.inputTokens + row.cachedInputTokens)} · out {formatTokens(row.outputTokens)}
+                                  entrée {formatTokens(row.inputTokens + row.cachedInputTokens)} · sortie {formatTokens(row.outputTokens)}
                                 </div>
                                 {(row.apiRunCount > 0 || row.subscriptionRunCount > 0) ? (
                                   <div className="text-xs text-muted-foreground">
@@ -804,19 +804,19 @@ export function Costs() {
                 <div className="space-y-4">
                   <Card>
                     <CardHeader className="px-5 pt-5 pb-2">
-                      <CardTitle className="text-base">By project</CardTitle>
-                      <CardDescription>Run costs attributed through project-linked issues.</CardDescription>
+                      <CardTitle className="text-base">Par projet</CardTitle>
+                      <CardDescription>Coûts des runs attribués via les tâches liées au projet.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-2 px-5 pb-5 pt-2">
                       {(spendData?.byProject.length ?? 0) === 0 ? (
-                        <p className="text-sm text-muted-foreground">No project-attributed run costs yet.</p>
+                        <p className="text-sm text-muted-foreground">Aucun coût de run attribué à un projet pour l'instant.</p>
                       ) : (
                         spendData?.byProject.map((row, index) => (
                           <div
                             key={row.projectId ?? `unattributed-${index}`}
                             className="flex items-center justify-between gap-3 border border-border px-3 py-2 text-sm"
                           >
-                            <span className="truncate">{row.projectName ?? row.projectId ?? "Unattributed"}</span>
+                            <span className="truncate">{row.projectName ?? row.projectId ?? "Non attribué"}</span>
                             <span className="font-medium tabular-nums">{formatCents(row.costCents)}</span>
                           </div>
                         ))
@@ -824,7 +824,7 @@ export function Costs() {
                     </CardContent>
                   </Card>
 
-                  <FinanceTimelineCard rows={topFinanceEvents.slice(0, 6)} emptyMessage="No finance events yet. Add account-level charges once biller invoices or credits land." />
+                  <FinanceTimelineCard rows={topFinanceEvents.slice(0, 6)} emptyMessage="Aucun événement financier pour l'instant. Ajoutez des charges au niveau du compte dès réception des factures ou crédits des facturiers." />
                 </div>
               </div>
             </>
@@ -840,34 +840,34 @@ export function Costs() {
             <>
               <Card className="border-border/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))]">
                 <CardHeader className="px-5 pt-5 pb-3">
-                  <CardTitle className="text-base">Budget control plane</CardTitle>
+                  <CardTitle className="text-base">Plan de contrôle budgétaire</CardTitle>
                   <CardDescription>
-                    Hard-stop spend limits for agents and projects. Provider subscription quota stays separate and appears under Providers.
+                    Plafonds de dépenses fermes pour les agents et les projets. Le quota d'abonnement fournisseur est séparé et apparaît sous Fournisseurs.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-3 px-5 pb-5 pt-0 md:grid-cols-4">
                   <MetricTile
-                    label="Active incidents"
+                    label="Incidents actifs"
                     value={String(activeBudgetIncidents.length)}
-                    subtitle="Open soft or hard threshold crossings"
+                    subtitle="Franchissements de seuil doux ou dur ouverts"
                     icon={ReceiptText}
                   />
                   <MetricTile
-                    label="Pending approvals"
+                    label="Approbations en attente"
                     value={String(budgetData?.pendingApprovalCount ?? 0)}
-                    subtitle="Budget override approvals awaiting board action"
+                    subtitle="Dérogations budgétaires en attente d'action du conseil"
                     icon={ArrowUpRight}
                   />
                   <MetricTile
-                    label="Paused agents"
+                    label="Agents en pause"
                     value={String(budgetData?.pausedAgentCount ?? 0)}
-                    subtitle="Agent heartbeats blocked by budget"
+                    subtitle="Heartbeats d'agents bloqués par le budget"
                     icon={Coins}
                   />
                   <MetricTile
-                    label="Paused projects"
+                    label="Projets en pause"
                     value={String(budgetData?.pausedProjectCount ?? 0)}
-                    subtitle="Project execution blocked by budget"
+                    subtitle="Exécution de projets bloquée par le budget"
                     icon={DollarSign}
                   />
                 </CardContent>
@@ -876,9 +876,9 @@ export function Costs() {
               {activeBudgetIncidents.length > 0 ? (
                 <div className="space-y-3">
                   <div>
-                    <h2 className="text-lg font-semibold">Active incidents</h2>
+                    <h2 className="text-lg font-semibold">Incidents actifs</h2>
                     <p className="text-sm text-muted-foreground">
-                      Resolve hard stops here by raising the budget or explicitly keeping the scope paused.
+                      Résolvez les blocages fermes ici en augmentant le budget ou en maintenant explicitement la portée en pause.
                     </p>
                   </div>
                   <div className="grid gap-4 xl:grid-cols-2">
@@ -907,13 +907,15 @@ export function Costs() {
                   return (
                     <section key={scopeType} className="space-y-3">
                       <div>
-                        <h2 className="text-lg font-semibold capitalize">{scopeType} budgets</h2>
+                        <h2 className="text-lg font-semibold capitalize">
+                          {scopeType === "company" ? "Budgets d'entreprise" : scopeType === "agent" ? "Budgets par agent" : "Budgets par projet"}
+                        </h2>
                         <p className="text-sm text-muted-foreground">
                           {scopeType === "company"
-                            ? "Company-wide monthly policy."
+                            ? "Politique mensuelle à l'échelle de l'entreprise."
                             : scopeType === "agent"
-                              ? "Recurring monthly spend policies for individual agents."
-                              : "Lifetime spend policies for execution-bound projects."}
+                              ? "Politiques de dépenses mensuelles récurrentes par agent."
+                              : "Politiques de dépenses à vie pour les projets liés à l'exécution."}
                         </p>
                       </div>
                       <div className="grid gap-4 xl:grid-cols-2">
@@ -939,7 +941,7 @@ export function Costs() {
                 {budgetPolicies.length === 0 ? (
                   <Card>
                     <CardContent className="px-5 py-8 text-sm text-muted-foreground">
-                      No budget policies yet. Set agent and project budgets from their detail pages, or use the existing company monthly budget control.
+                      Aucune politique budgétaire pour l'instant. Définissez les budgets des agents et projets depuis leurs pages de détail, ou utilisez le contrôle budgétaire mensuel d'entreprise existant.
                     </CardContent>
                   </Card>
                 ) : null}
@@ -950,7 +952,7 @@ export function Costs() {
 
         <TabsContent value="providers" className="mt-4 space-y-4">
           {showCustomPrompt ? (
-            <p className="text-sm text-muted-foreground">Select a start and end date to load data.</p>
+            <p className="text-sm text-muted-foreground">Sélectionnez une date de début et de fin pour charger les données.</p>
           ) : (
             <>
               <Tabs value={effectiveProvider} onValueChange={setActiveProvider}>
@@ -958,7 +960,7 @@ export function Costs() {
 
                 <TabsContent value="all" className="mt-4">
                   {providers.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">No cost events in this period.</p>
+                    <p className="text-sm text-muted-foreground">Aucun événement de coût sur cette période.</p>
                   ) : (
                     <div className="grid gap-4 md:grid-cols-2">
                       {providers.map((provider) => (
@@ -1005,7 +1007,7 @@ export function Costs() {
 
         <TabsContent value="billers" className="mt-4 space-y-4">
           {showCustomPrompt ? (
-            <p className="text-sm text-muted-foreground">Select a start and end date to load data.</p>
+            <p className="text-sm text-muted-foreground">Sélectionnez une date de début et de fin pour charger les données.</p>
           ) : (
             <>
               <Tabs value={effectiveBiller} onValueChange={setActiveBiller}>
@@ -1013,7 +1015,7 @@ export function Costs() {
 
                 <TabsContent value="all" className="mt-4">
                   {billers.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">No billable events in this period.</p>
+                    <p className="text-sm text-muted-foreground">Aucun événement facturable sur cette période.</p>
                   ) : (
                     <div className="grid gap-4 md:grid-cols-2">
                       {billers.map((biller) => {
@@ -1058,7 +1060,7 @@ export function Costs() {
 
         <TabsContent value="finance" className="mt-4 space-y-4">
           {showCustomPrompt ? (
-            <p className="text-sm text-muted-foreground">Select a start and end date to load data.</p>
+            <p className="text-sm text-muted-foreground">Sélectionnez une date de début et de fin pour charger les données.</p>
           ) : financeLoading ? (
             <PageSkeleton variant="costs" />
           ) : financeError ? (
@@ -1077,12 +1079,12 @@ export function Costs() {
                 <div className="space-y-4">
                   <Card>
                     <CardHeader className="px-5 pt-5 pb-2">
-                      <CardTitle className="text-base">By biller</CardTitle>
-                      <CardDescription>Account-level financial events grouped by who charged or credited them.</CardDescription>
+                      <CardTitle className="text-base">Par facturier</CardTitle>
+                      <CardDescription>Événements financiers au niveau du compte regroupés par émetteur de charge ou de crédit.</CardDescription>
                     </CardHeader>
                     <CardContent className="grid gap-4 px-5 pb-5 pt-2 md:grid-cols-2">
                       {(financeData?.byBiller.length ?? 0) === 0 ? (
-                        <p className="text-sm text-muted-foreground">No finance events yet.</p>
+                        <p className="text-sm text-muted-foreground">Aucun événement financier pour l'instant.</p>
                       ) : (
                         financeData?.byBiller.map((row) => <FinanceBillerCard key={row.biller} row={row} />)
                       )}

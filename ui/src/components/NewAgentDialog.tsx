@@ -292,7 +292,7 @@ export function NewAgentDialog() {
                   Back
                 </button>
                 <p className="text-sm text-muted-foreground">
-                  Choose the runtime Paperclip should start or resume directly.
+                  Choisissez le runtime que Kovv-ia doit démarrer ou reprendre directement.
                 </p>
               </div>
 
@@ -337,7 +337,7 @@ export function NewAgentDialog() {
                 <div className="space-y-1">
                   <h2 className="text-sm font-semibold">Invite an external agent</h2>
                   <p className="text-sm text-muted-foreground">
-                    Generate a one-time onboarding prompt that any compatible agent can use to request access, wait for approval, and claim its Paperclip API key.
+                    Générez un prompt d'intégration unique qu'un agent compatible peut utiliser pour demander l'accès, attendre l'approbation et récupérer sa clé API Kovv-ia.
                   </p>
                 </div>
               </div>

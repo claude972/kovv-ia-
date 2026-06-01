@@ -193,7 +193,7 @@ function ImportPreviewPane({
 }) {
   if (!selectedFile || content === null) {
     return (
-      <EmptyState icon={Package} message="Select a file to preview its contents." />
+      <EmptyState icon={Package} message="Sélectionnez un fichier pour prévisualiser son contenu." />
     );
   }
 
@@ -255,7 +255,7 @@ function ImportPreviewPane({
           </pre>
         ) : (
           <div className="rounded-lg border border-border bg-accent/10 px-4 py-3 text-sm text-muted-foreground">
-            Binary asset preview is not available for this file type.
+            La prévisualisation des ressources binaires n'est pas disponible pour ce type de fichier.
           </div>
         )}
       </div>
@@ -411,7 +411,7 @@ function ConflictResolutionList({
       <div className="rounded-md border border-border">
         <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
           <h3 className="text-sm font-medium">
-            Renames
+            Renommages
           </h3>
           <span className="text-xs text-muted-foreground">
             {conflicts.length} item{conflicts.length === 1 ? "" : "s"}
@@ -495,10 +495,10 @@ function ConflictResolutionList({
                     {isConfirmed ? (
                       <>
                         <Check className="h-3 w-3" />
-                        confirmed
+                        confirmé
                       </>
                     ) : (
-                      "confirm rename"
+                      "confirmer le renommage"
                     )}
                   </button>
                 )}
@@ -549,7 +549,7 @@ function AdapterPickerList({
     <div className="mx-5 mt-3">
       <div className="rounded-md border border-border">
         <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
-          <h3 className="text-sm font-medium">Adapters</h3>
+          <h3 className="text-sm font-medium">Adaptateurs</h3>
           <span className="text-xs text-muted-foreground">
             {agents.length} agent{agents.length === 1 ? "" : "s"}
           </span>
@@ -595,7 +595,7 @@ function AdapterPickerList({
                     onClick={() => onToggleExpand(agent.slug)}
                   >
                     <ChevronRight className={cn("h-3 w-3 transition-transform", isExpanded && "rotate-90")} />
-                    configure adapter
+                    configurer l'adaptateur
                   </button>
                 </div>
                 {isExpanded && (
@@ -629,11 +629,11 @@ async function readLocalPackageZip(file: File): Promise<{
   files: Record<string, CompanyPortabilityFileEntry>;
 }> {
   if (!/\.zip$/i.test(file.name)) {
-    throw new Error("Select a .zip company package.");
+    throw new Error("Sélectionnez un paquet d'entreprise au format .zip.");
   }
   const archive = await readZipArchive(await file.arrayBuffer());
   if (Object.keys(archive.files).length === 0) {
-    throw new Error("No package files were found in the selected zip archive.");
+    throw new Error("Aucun fichier de paquet trouvé dans l'archive zip sélectionnée.");
   }
   return {
     name: file.name,
@@ -704,12 +704,12 @@ export function CompanyImport() {
   }, [companyAgents]);
 
   const localZipHelpText =
-    "Upload a .zip exported directly from Paperclip. Re-zipped archives created by Finder, Explorer, or other zip tools may not import correctly.";
+    "Importez un fichier .zip exporté directement depuis Kovv-ia. Les archives recompressées avec Finder, Explorer ou d'autres outils zip peuvent ne pas s'importer correctement.";
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Org Chart", href: "/org" },
-      { label: "Import" },
+      { label: "Organigramme", href: "/org" },
+      { label: "Importation" },
     ]);
   }, [setBreadcrumbs]);
 
@@ -804,8 +804,8 @@ export function CompanyImport() {
     onError: (err) => {
       pushToast({
         tone: "error",
-        title: "Preview failed",
-        body: err instanceof Error ? err.message : "Failed to preview import.",
+        title: "Échec de la prévisualisation",
+        body: err instanceof Error ? err.message : "Impossible de prévisualiser l'importation.",
       });
     },
   });
@@ -863,8 +863,8 @@ export function CompanyImport() {
       setSelectedCompanyId(importedCompany.id);
       pushToast({
         tone: "success",
-        title: "Import complete",
-        body: `${result.company.name}: ${result.agents.length} agent${result.agents.length === 1 ? "" : "s"} processed.`,
+        title: "Importation terminée",
+        body: `${result.company.name} : ${result.agents.length} agent${result.agents.length === 1 ? "" : "s"} traité${result.agents.length === 1 ? "" : "s"}.`,
       });
       // Force a fresh dashboard load so newly imported agents are immediately visible.
       window.location.assign(`/${importedCompany.issuePrefix}/dashboard`);
@@ -872,8 +872,8 @@ export function CompanyImport() {
     onError: (err) => {
       pushToast({
         tone: "error",
-        title: "Import failed",
-        body: err instanceof Error ? err.message : "Failed to apply import.",
+        title: "Échec de l'importation",
+        body: err instanceof Error ? err.message : "Impossible d'appliquer l'importation.",
       });
     },
   });
@@ -888,8 +888,8 @@ export function CompanyImport() {
     } catch (err) {
       pushToast({
         tone: "error",
-        title: "Package read failed",
-        body: err instanceof Error ? err.message : "Failed to read folder.",
+        title: "Échec de la lecture du paquet",
+        body: err instanceof Error ? err.message : "Impossible de lire le dossier.",
       });
     }
   }
@@ -1086,7 +1086,7 @@ export function CompanyImport() {
   const selectedAction = selectedFile ? (actionMap.get(selectedFile) ?? null) : null;
 
   if (!selectedCompanyId) {
-    return <EmptyState icon={Download} message="Select a company to import into." />;
+    return <EmptyState icon={Download} message="Sélectionnez une entreprise dans laquelle importer." />;
   }
 
   return (
@@ -1094,17 +1094,17 @@ export function CompanyImport() {
       {/* Source form section */}
       <div className="border-b border-border px-5 py-5 space-y-4">
         <div>
-          <h2 className="text-base font-semibold">Import source</h2>
+          <h2 className="text-base font-semibold">Source d'importation</h2>
           <p className="text-xs text-muted-foreground mt-1">
-            Choose a GitHub repo or upload a local Paperclip zip package.
+            Choisissez un dépôt GitHub ou importez un paquet zip Kovv-ia local.
           </p>
         </div>
 
         <div className="grid gap-2 md:grid-cols-2">
           {(
             [
-              { key: "github", icon: Github, label: "GitHub repo" },
-              { key: "local", icon: Upload, label: "Local zip" },
+              { key: "github", icon: Github, label: "Dépôt GitHub" },
+              { key: "local", icon: Upload, label: "Zip local" },
             ] as const
           ).map(({ key, icon: Icon, label }) => (
             <button
@@ -1144,12 +1144,12 @@ export function CompanyImport() {
                 variant="outline"
                 onClick={() => packageInputRef.current?.click()}
               >
-                Choose zip
+                Choisir un zip
               </Button>
               {localPackage && (
                 <span className="text-xs text-muted-foreground">
-                  {localPackage.name} with{" "}
-                  {Object.keys(localPackage.files).length} file
+                  {localPackage.name} avec{" "}
+                  {Object.keys(localPackage.files).length} fichier
                   {Object.keys(localPackage.files).length === 1 ? "" : "s"}
                 </span>
               )}
@@ -1162,8 +1162,8 @@ export function CompanyImport() {
           </div>
         ) : (
           <Field
-            label="GitHub URL"
-            hint="Repo tree path or blob URL to COMPANY.md (e.g. github.com/owner/repo/tree/main/company)."
+            label="URL GitHub"
+            hint="Chemin d'arborescence du dépôt ou URL blob vers COMPANY.md (ex. github.com/owner/repo/tree/main/company)."
           >
             <input
               className="w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-sm outline-none"
@@ -1178,7 +1178,7 @@ export function CompanyImport() {
           </Field>
         )}
 
-        <Field label="Target" hint="Import into this company or create a new one.">
+        <Field label="Cible" hint="Importez dans cette entreprise ou créez-en une nouvelle.">
           <select
             className="w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-sm outline-none"
             value={targetMode}
@@ -1187,31 +1187,31 @@ export function CompanyImport() {
               setImportPreview(null);
             }}
           >
-            <option value="new">Create new company</option>
+            <option value="new">Créer une nouvelle entreprise</option>
             <option value="existing">
-              Existing company: {selectedCompany?.name}
+              Entreprise existante : {selectedCompany?.name}
             </option>
           </select>
         </Field>
 
         {targetMode === "new" && (
           <Field
-            label="New company name"
-            hint="Optional override. Leave blank to use the package name."
+            label="Nom de la nouvelle entreprise"
+            hint="Remplacement optionnel. Laissez vide pour utiliser le nom du paquet."
           >
             <input
               className="w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-sm outline-none"
               type="text"
               value={newCompanyName}
               onChange={(e) => setNewCompanyName(e.target.value)}
-              placeholder="Imported Company"
+              placeholder="Entreprise importée"
             />
           </Field>
         )}
 
         <Field
-          label="Collision strategy"
-          hint="Board imports can rename, skip, or replace matching company content."
+          label="Stratégie de collision"
+          hint="Les importations peuvent renommer, ignorer ou remplacer le contenu existant de l'entreprise."
         >
           <select
             className="w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-sm outline-none"
@@ -1221,9 +1221,9 @@ export function CompanyImport() {
               setImportPreview(null);
             }}
           >
-            <option value="rename">Rename on conflict</option>
-            <option value="skip">Skip on conflict</option>
-            <option value="replace">Replace existing</option>
+            <option value="rename">Renommer en cas de conflit</option>
+            <option value="skip">Ignorer en cas de conflit</option>
+            <option value="replace">Remplacer l'existant</option>
           </select>
         </Field>
 
@@ -1234,7 +1234,7 @@ export function CompanyImport() {
             onClick={() => previewMutation.mutate()}
             disabled={previewMutation.isPending || !hasSource}
           >
-            {previewMutation.isPending ? "Previewing..." : "Preview import"}
+            {previewMutation.isPending ? "Prévisualisation..." : "Prévisualiser l'importation"}
           </Button>
         </div>
       </div>
@@ -1246,19 +1246,19 @@ export function CompanyImport() {
           <div className="sticky top-0 z-10 border-b border-border bg-background px-5 py-3">
             <div className="flex flex-wrap items-center gap-4 text-sm">
               <span className="font-medium">
-                Import preview
+                Prévisualisation de l'importation
               </span>
               <span className="text-muted-foreground">
-                {selectedCount} / {totalFiles} file{totalFiles === 1 ? "" : "s"} selected
+                {selectedCount} / {totalFiles} fichier{totalFiles === 1 ? "" : "s"} sélectionné{totalFiles === 1 ? "" : "s"}
               </span>
               {conflicts.length > 0 && (
                 <span className="text-amber-500">
-                  {conflicts.length} conflict{conflicts.length === 1 ? "" : "s"}
+                  {conflicts.length} conflit{conflicts.length === 1 ? "" : "s"}
                 </span>
               )}
               {importPreview.errors.length > 0 && (
                 <span className="text-destructive">
-                  {importPreview.errors.length} error{importPreview.errors.length === 1 ? "" : "s"}
+                  {importPreview.errors.length} erreur{importPreview.errors.length === 1 ? "" : "s"}
                 </span>
               )}
             </div>
@@ -1295,8 +1295,8 @@ export function CompanyImport() {
             >
               <Download className="mr-1.5 h-3.5 w-3.5" />
               {importMutation.isPending
-                ? "Importing..."
-                : `Import ${selectedCount} file${selectedCount === 1 ? "" : "s"}`}
+                ? "Importation..."
+                : `Importer ${selectedCount} fichier${selectedCount === 1 ? "" : "s"}`}
             </Button>
           </div>
 
@@ -1322,7 +1322,7 @@ export function CompanyImport() {
           <div className="grid gap-4 xl:h-[calc(100vh-16rem)] xl:grid-cols-[19rem_minmax(0,1fr)] xl:gap-0">
             <aside className="flex max-h-[24rem] flex-col overflow-hidden border-b border-border xl:max-h-none xl:border-b-0 xl:border-r">
               <div className="border-b border-border px-4 py-3 shrink-0">
-                <h2 className="text-base font-semibold">Package files</h2>
+                <h2 className="text-base font-semibold">Fichiers du paquet</h2>
               </div>
               <div className="flex-1 overflow-y-auto">
                 <FileTree
