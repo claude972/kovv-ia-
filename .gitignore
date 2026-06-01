@@ -6,8 +6,10 @@ dist/
 ui/storybook-static/
 .env
 .env.*
+!.env.example
 !.env.*.example
 *.tsbuildinfo
+tools/telegram-bridge/state.json
 drizzle/meta/
 .vite/
 coverage/
