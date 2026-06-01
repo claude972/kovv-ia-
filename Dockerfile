@@ -52,6 +52,27 @@ RUN pnpm --filter @paperclipai/plugin-sdk build
 RUN pnpm --filter @paperclipai/server build
 RUN test -f server/dist/index.js || (echo "ERROR: server build output missing" && exit 1)
 
+# Build the paperclipai CLI so it's usable inside the production image (auth bootstrap-ceo, etc).
+RUN pnpm --filter paperclipai build
+RUN test -f cli/dist/index.js || (echo "ERROR: cli build output missing" && exit 1)
+
+# The CLI bundle keeps workspace transitive deps as runtime externals. pnpm's strict layout
+# doesn't symlink them into cli/node_modules by default, so the ESM resolver can't find
+# them when running /app/cli/dist/index.js. We symlink them from the pnpm store so the
+# CLI works out of the box inside the container.
+RUN cd /app/cli && mkdir -p node_modules && \
+    for pkg in zod ws postgres drizzle-orm embedded-postgres picocolors commander dotenv; do \
+      if [ ! -e "node_modules/$pkg" ]; then \
+        src=$(find /app/node_modules/.pnpm -maxdepth 3 -type d -path "*/node_modules/$pkg" | head -1); \
+        if [ -n "$src" ]; then ln -sfn "$src" "node_modules/$pkg"; fi; \
+      fi; \
+    done && \
+    if [ ! -e node_modules/@clack/prompts ]; then \
+      mkdir -p node_modules/@clack && \
+      src=$(find /app/node_modules/.pnpm -maxdepth 4 -type d -path "*/node_modules/@clack/prompts" | head -1) && \
+      [ -n "$src" ] && ln -sfn "$src" node_modules/@clack/prompts || true; \
+    fi
+
 FROM base AS production
 ARG USER_UID=1000
 ARG USER_GID=1000
@@ -66,6 +87,11 @@ RUN npm install --global --omit=dev @anthropic-ai/claude-code@latest @openai/cod
 
 COPY scripts/docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Expose the paperclipai CLI in PATH so `docker exec paperclip-prod paperclipai ...` works
+# (used for auth bootstrap-ceo, doctor, configure, etc).
+RUN chmod +x /app/cli/dist/index.js \
+  && ln -sf /app/cli/dist/index.js /usr/local/bin/paperclipai
 
 ENV NODE_ENV=production \
   HOME=/paperclip \

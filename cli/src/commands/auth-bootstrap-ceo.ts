@@ -61,12 +61,27 @@ export async function bootstrapCeoInvite(opts: {
   const configPath = resolveConfigPath(opts.config);
   loadPaperclipEnvFile(configPath);
   const config = readConfig(configPath);
-  if (!config) {
-    p.log.error(`No config found at ${configPath}. Run ${pc.cyan("paperclip onboard")} first.`);
+
+  // Headless Docker deployments configure everything via env vars (DATABASE_URL +
+  // PAPERCLIP_PUBLIC_URL) and never write a config.json. Allow the command to proceed
+  // in that case as long as the required env vars are present.
+  const envCanCover =
+    Boolean(process.env.DATABASE_URL) &&
+    Boolean(
+      process.env.PAPERCLIP_PUBLIC_URL ??
+        process.env.PAPERCLIP_AUTH_PUBLIC_BASE_URL ??
+        process.env.BETTER_AUTH_URL ??
+        process.env.BETTER_AUTH_BASE_URL,
+    );
+
+  if (!config && !envCanCover) {
+    p.log.error(
+      `No config found at ${configPath} and DATABASE_URL/PAPERCLIP_PUBLIC_URL env vars not set. Run ${pc.cyan("paperclip onboard")} first, or set the env vars (Docker prod deployments).`,
+    );
     return;
   }
 
-  if (config.server.deploymentMode !== "authenticated") {
+  if (config && config.server.deploymentMode !== "authenticated") {
     p.log.info("Deployment mode is local_trusted. Bootstrap CEO invite is only required for authenticated mode.");
     return;
   }
